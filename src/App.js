@@ -1,3 +1,6 @@
+import React from "react";
+import ReactDOM from "react-dom";
+
 // Function component
 const Pet = (props) => {
   return React.createElement("div", {}, [
