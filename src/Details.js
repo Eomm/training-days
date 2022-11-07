@@ -2,7 +2,7 @@ import { Component } from "react";
 import { useParams } from "react-router-dom";
 
 import Carousel from "./Carousel";
-
+import ThemeContext from "./ThemeContext";
 import ErrorBoundary from "./ErrorBoundaries";
 
 // Old style: Class component
@@ -32,7 +32,7 @@ class Details extends Component {
       return <h2>Loading...</h2>;
     }
 
-    if (this.props.params.id === '2') {
+    if (this.props.params.id === "2") {
       throw new Error("Error boundary test");
     }
 
@@ -45,7 +45,11 @@ class Details extends Component {
         <div>
           <h1>{name}</h1>
           <h2>{`${animal} — ${breed} — ${city}, ${state}`}</h2>
-          <button>Adopt {name}</button>
+          <ThemeContext.Consumer>
+            {([theme]) => (
+              <button style={{ backgroundColor: theme }}>Adopt {name}</button>
+            )}
+          </ThemeContext.Consumer>
           <p>{description}</p>
         </div>
         {/* <div>
@@ -60,6 +64,9 @@ class Details extends Component {
 // export default withRouter(Details);
 const WrappedDetails = () => {
   const params = useParams();
+
+  // easy way:
+  // const [theme] = useContext(ThemeContext);
   return (
     <ErrorBoundary>
       <Details params={params} />

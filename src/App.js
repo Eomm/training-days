@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
+import ThemeContext from "./ThemeContext";
 import SearchParams from "./SearchParams";
 import Details from "./Details";
 
@@ -25,17 +26,21 @@ import Details from "./Details";
 // };
 
 const App = () => {
+  const theme = React.useState("darkblue");
+
   return (
-    <BrowserRouter>
-      <header>
-        <Link to="/">Adopt Me!</Link>
-      </header>
-      <Routes>
-        {/* pattern matching */}
-        <Route exact path="/details/:id" element={<Details />} />
-        <Route path="/" element={<SearchParams />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeContext.Provider value={theme}>
+      <BrowserRouter>
+        <header>
+          <Link to="/">Adopt Me!</Link>
+        </header>
+        <Routes>
+          {/* pattern matching */}
+          <Route exact path="/details/:id" element={<Details />} />
+          <Route path="/" element={<SearchParams />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeContext.Provider>
   );
 };
 
