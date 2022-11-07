@@ -1,0 +1,23 @@
+{
+  "name": "frontend-masters",
+  "version": "1.0.0",
+  "description": "My skill-up on frontend-masters! https://frontendmasters.com/",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write \"src/**/*.{js,jsx}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eomm/frontend-masters.git"
+  },
+  "keywords": [],
+  "author": "Manuel Spigolon <manuel.spigolon@nearform.com> (https://github.com/Eomm)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Eomm/frontend-masters/issues"
+  },
+  "homepage": "https://github.com/Eomm/frontend-masters#readme",
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
+}

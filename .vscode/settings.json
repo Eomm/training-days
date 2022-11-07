@@ -18,5 +18,7 @@
     "statusBar.background": "#E8EEEF",
     "statusBar.foreground": "#8EA6C9",
     "statusBar.border": "#DFE0F3"
-  }
+  },
+  "editor.formatOnSave": true,
+  "prettier.requireConfig": true
 }

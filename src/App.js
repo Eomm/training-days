@@ -1,4 +1,3 @@
-
 // Function component
 const Pet = (props) => {
   return React.createElement("div", {}, [
@@ -10,7 +9,6 @@ const Pet = (props) => {
 
 // Function component
 const App = () => {
-
   // one way data flow
   return React.createElement("div", {}, [
     React.createElement("h1", {}, "Adopt Me!"),
