@@ -1,19 +1,20 @@
 import { render } from "react-dom";
-import { StrictMode, useState, lazy, Suspense } from "react";
+import { StrictMode, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 // import SearchParams from "./SearchParams";
 const SearchParams = lazy(() => import("./SearchParams"));
 // import Details from "./Details";
 const Details = lazy(() => import("./Details"));
-import ThemeContext from "./ThemeContext";
+
+import { Provider } from "react-redux";
+import store from "./Store";
 
 const App = () => {
-  const theme = useState("darkblue");
   return (
     <StrictMode>
       <Suspense fallback={<h1>Loading route...</h1>}>
-        <ThemeContext.Provider value={theme}>
+        <Provider store={store}>
           <div
             className="p-0 m-0"
             // specific content goes to style
@@ -28,7 +29,7 @@ const App = () => {
               </Routes>
             </BrowserRouter>
           </div>
-        </ThemeContext.Provider>
+        </Provider>
       </Suspense>
     </StrictMode>
   );
