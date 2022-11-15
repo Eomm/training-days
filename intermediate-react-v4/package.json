@@ -7,6 +7,7 @@
     "tail:init": "tailwindcss init",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "dev": "parcel src/index.html",
     "build": "parcel build",
     "start": "npm -s run build && node dist/backend/index.js",

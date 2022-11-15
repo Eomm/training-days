@@ -1,5 +1,6 @@
 {
   "recommendations": [
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "orta.vscode-jest"
   ]
 }
