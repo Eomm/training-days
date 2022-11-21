@@ -1,20 +1,30 @@
 import { useState, useEffect } from 'react';
 
-function getItemFromLocalStorage() {
-  const item = localStorage.getItem('counterStorage');
-  return item ? JSON.parse(item).count : 0;
+const useLocalStorage = (key, initialState) => {
+  function getItemFromLocalStorage() {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item).value : initialState;
+  }
+
+  const [value, setValue] = useState(getItemFromLocalStorage());
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify({ value }));
+  }, [value]);
+
+  return [value, setValue];
 }
+
 
 function callback(count) {
   console.log('After the state has been updated');
-  localStorage.setItem('counterStorage', JSON.stringify({ count }));
   document.title = `Hello ${count}`;
 }
 
 const Counter = (props) => {
 
   const { max } = props;
-  const [count, setCount] = useState(getItemFromLocalStorage());
+  const [count, setCount] = useLocalStorage('counterHook', 0);
 
   const increment = () => {
     // example 1
