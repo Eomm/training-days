@@ -13,7 +13,27 @@ class Counter extends Component {
   }
 
   increment() {
-    this.setState({ count: this.state.count + 1 });
+    // example 1
+    // this.setState({ count: this.state.count + 1 });
+
+    // example 2
+    // this.setState((state) => { return { count: state.count + 1 } });
+
+    // example 3: you can extract the function and test it
+    this.setState((state, props) => {
+      const { max } = props;
+      if(state.count >= max) return;
+      return { count: state.count + 1 }
+    });
+    
+    // example 4
+    this.setState((state, props) => {
+      const { max } = props;
+      if(state.count >= max) return;
+      return { count: state.count + 1 }
+    }, function callback() {
+      console.log('After the state has been updated', this.state);
+    });
   }
 
   decrement() {
@@ -41,4 +61,4 @@ class Counter extends Component {
   }
 }
 
-render(<Counter />, document.getElementById("root"));
+render(<Counter max={10} />, document.getElementById("root"));
