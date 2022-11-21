@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import { render } from "react-dom";
 
+function getItemFromLocalStorage() {
+  const item = localStorage.getItem('counterStorage');
+  return item ? JSON.parse(item) : { count: 0 };
+}
+
+function callback() {
+  console.log('After the state has been updated', this.state);
+  localStorage.setItem('counterStorage', JSON.stringify(this.state));
+  document.title = `Hello ${this.state.count}`;
+}
+
 class Counter extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { count: 0 };
+    this.state = getItemFromLocalStorage();
 
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
@@ -31,17 +42,15 @@ class Counter extends Component {
       const { max } = props;
       if(state.count >= max) return;
       return { count: state.count + 1 }
-    }, function callback() {
-      console.log('After the state has been updated', this.state);
-    });
+    }, callback);
   }
 
   decrement() {
-    this.setState({ count: this.state.count - 1 });
+    this.setState({ count: this.state.count - 1 }, callback);
   }
 
   reset() {
-    this.setState({ count: 0 });
+    this.setState({ count: 0 }, callback);
   }
 
   render() {
