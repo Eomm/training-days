@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const useLocalStorage = (key, initialState) => {
   function getItemFromLocalStorage() {
@@ -25,6 +25,15 @@ const Counter = (props) => {
 
   const { max } = props;
   const [count, setCount] = useLocalStorage('counterHook', 0);
+
+  // interesting usage to get the previous value
+  const countRef = useRef();
+
+  let message = '';
+  if(countRef.current > count) { message = 'decremented'; }
+  if(countRef.current < count) { message = 'incremented'; }
+
+  countRef.current = count;
 
   const increment = () => {
     // example 1
@@ -57,7 +66,7 @@ const Counter = (props) => {
 
   return (
     <div className="Counter">
-      <h1>Counter</h1>
+      <h1>Counter {message}</h1>
       <p>{count}</p>
       <button onClick={increment}>Increment</button>
       <button onClick={decrement}>Decrement</button>
