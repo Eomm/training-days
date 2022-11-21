@@ -3,7 +3,7 @@
 Course material for the course on Frontend Masters:
 
 - [Source Code](https://github.com/FrontendMasters/react-state-management)
-- [Web App]()
+- [Web App](https://speakerdeck.com/stevekinney/react-state)
 - [Course](https://frontendmasters.com/courses/pure-react-state/)
 
 
@@ -11,6 +11,7 @@ Course material for the course on Frontend Masters:
 # Notes
 
 Basically, Reactjs transforms your application state into DOM nodes.
+
 
 ## Different state types
 
@@ -24,6 +25,12 @@ All these states can be grouped into two categories:
 
 - Model state: data in your application
 - Ephemeral state: everything else that will be wiped out when you hit refresh
+
+
+## What should be in the state?
+
+- Can I calculate it based on any other state or props in my component? If yes, it doesn't belong in the state - calculate it.
+- Am I using it in render method? If yes, it belongs in the state, otherwise keep it as custom private fields.
 
 
 ## How setState works
