@@ -15,33 +15,57 @@
         gap: 4%; /* gap is a new property in CSS3. It is a shorthand for row-gap and column-gap. */
       }
 
-      figure {
-        flex-basis: 22%;
-        /* for the first row: gap 4% * 3 spaces = 12%. 100% - 12% / 4 boxes = 22% */
+      @media (min-width: 550px) {
+        .row {
+          display: flex;
+          flex-flow: row wrap;
+          justify-content: space-between;
+          gap: 4%; /* gap is a new property in CSS3. It is a shorthand for row-gap and column-gap. */
+        }
+
+        figure, .span2 {
+          flex-basis: 48%;
+        }
+
+        .span3, .span4 {
+          flex-basis: 100%;
+        }
+        .span3-1, .span2-4 {
+          flex-basis: 100%;
+        }
       }
 
-      .span2 {
-        flex-basis: 48%;
-        /* for the second row: gap 4% * 1 spaces = 4%. 100% - 4% / 2 boxes = 48% */
+      @media (min-width: 800px) {
+        figure, .span3-1 {
+          flex-basis: 22%;
+          /* for the first row: gap 4% * 3 spaces = 12%. 100% - 12% / 4 boxes = 22% */
+        }
+
+        .span2, .span2-4 {
+          flex-basis: 48%;
+          /* for the second row: gap 4% * 1 spaces = 4%. 100% - 4% / 2 boxes = 48% */
+        }
+
+        .span3 {
+          flex-basis: 74%;
+        }
+
+        .span4 {
+          flex-basis: 100%;
+        }
+
+        .order1 {
+          order: 1;
+        }
+        .order2 {
+          order: 2;
+        }
+        .order3 {
+          order: 3;
+        }
       }
 
-      .span3 {
-        flex-basis: 74%;
-      }
-
-      .span4 {
-        flex-basis: 100%;
-      }
-
-      .order1 {
-        order: 1;
-      }
-      .order2 {
-        order: 2;
-      }
-      .order3 {
-        order: 3;
-      }
+      
 
       /* default styling, no changes needed here */
 
@@ -168,7 +192,7 @@
           <p>Lorem ipsum dolor sit amet.</p>
         </figcaption>
       </figure>
-      <figure>
+      <figure class="span3-1">
         <div class="two"></div>
 
         <figcaption>
@@ -191,7 +215,7 @@
 
     <!-- Row 5: 3 boxes, 1-2-1 distribution -->
     <div class="row">
-      <figure class="span2 order2">
+      <figure class="span2 span2-4 order2">
         <div class="four"></div>
         <figcaption>
           <h2>Abstract 4</h2>
