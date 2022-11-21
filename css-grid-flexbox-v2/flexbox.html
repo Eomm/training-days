@@ -8,7 +8,7 @@
     <style>
       /* using border-box model -- see https://frontendmasters.github.io/bootcamp/layout#box-model-types for explanation */
       html {
-        box-sizing: border-box;
+        box-sizing: border-box; /* how do you determine width (border+padding). Easier for math */
       }
       *,
       *::before,
@@ -30,6 +30,13 @@
         border: 10px dotted #9b2226;
         width: 900px;
         height: 500px;
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap; /* wrap to next line */
+        justify-content: space-between; /* how to deal with extra space in the flex container */
+        align-items: center; /* similar to a vertical align */
+        align-content: flex-start; /* how to deal with extra space in cross axis (each row in this example) */
       }
       /* set a border and background color to see each LI. Min-width and min-height are not necessarily a good idea in flexbox, but they are needed for the demo to better see the properties work. */
       li {
@@ -37,6 +44,12 @@
         background-color: #ee9800;
         min-width: 100px;
         height: 100px;
+        order: 1; /* order of the flex items rearranging the box order. Now the <li> is no more strict */
+      }
+
+      .flex2 {
+        order: 2;
+        flex-basis: 25%; /* how much space the flex item takes up in the flex container. */
       }
     </style>
   </head>
