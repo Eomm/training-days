@@ -3,6 +3,8 @@
 Course material for the course on Frontend Masters:
 
 - [Source Code](https://github.com/FrontendMasters/react-state-management)
+- [Source Code](https://github.com/stevekinney/grudges-react-state)
+- [Source Code](https://github.com/stevekinney/star-wars-characters-react-state)
 - [Web App](https://speakerdeck.com/stevekinney/react-state)
 - [Course](https://frontendmasters.com/courses/pure-react-state/)
 
@@ -31,6 +33,7 @@ All these states can be grouped into two categories:
 
 - Can I calculate it based on any other state or props in my component? If yes, it doesn't belong in the state - calculate it.
 - Am I using it in render method? If yes, it belongs in the state, otherwise keep it as custom private fields.
+- Remember to use `useReducer` when you have complex objects (such as array) and a lot of state that depends on each other (such loadings, errors and response).
 
 
 ## How setState works
@@ -53,4 +56,36 @@ All these states can be grouped into two categories:
     this.setState((state) => { return { count: state.count + 1 } });
     // executes three times, incrementing the value (it shows +3)
   }
+```
+
+
+## Thunks
+
+It is a function returned from another function.
+
+```js
+const useThunkReducer = (reducer, initialState) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const enhancedDispatch = useCallback(action => {
+    if (typeof action === 'function') {
+      console.log('It is a thunk');
+      action(dispatch);
+    } else {
+      dispatch(action);
+    }
+  }, [dispatch]);
+  return [state, enhancedDispatch];
+};
+
+// usage
+const [state, dispatch] = useThunkReducer(reducer, initialState);
+const { characters } = state;
+
+useEffect(() => {
+  dispatch((dispatch) => {
+    // do something
+  });
+}, []);
+
+// ℹ️ You can build an UNDO/REDO functionality with thunks
 ```
