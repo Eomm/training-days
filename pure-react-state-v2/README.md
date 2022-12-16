@@ -1,10 +1,10 @@
-# intermediate-react-v4
+# pure-react-state-v2
 
 Course material for the course on Frontend Masters:
 
-- [Source Code](https://github.com/FrontendMasters/react-state-management)
-- [Source Code](https://github.com/stevekinney/grudges-react-state)
-- [Source Code](https://github.com/stevekinney/star-wars-characters-react-state)
+- [Source Code `react-state-management`](https://github.com/FrontendMasters/react-state-management)
+- [Source Code `grudges-react-state`](https://github.com/stevekinney/grudges-react-state)
+- [Source Code `star-wars-characters-react-state`](https://github.com/stevekinney/star-wars-characters-react-state)
 - [Web App](https://speakerdeck.com/stevekinney/react-state)
 - [Course](https://frontendmasters.com/courses/pure-react-state/)
 
