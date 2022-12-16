@@ -6,6 +6,7 @@ This section is a learning path for TypeScript, so it includes all the courses t
 - [Web App](https://www.typescript-training.com/course/fundamentals-v3)
 - [Source Code](https://github.com/mike-north/ts-fundamentals-v3)
 - [Course: Intermediate TypeScript](https://frontendmasters.com/courses/intermediate-typescript/)
+- [Web App](https://www.typescript-training.com/course/intermediate-v1)
 - [Course: Production-Grade TypeScript](https://frontendmasters.com/courses/production-typescript/)
 
 ## Notes
@@ -22,4 +23,6 @@ The `never` type represents the type of values that never occur. For example, a 
 
 Type Guards are some expressions that perform a runtime check that guarantees the type in some scope. Type guards can be used to narrow types in the conditional branches.
 
+---
 
+Declaration Merging is a feature that allows us to combine multiple declarations of the same name into one. It is a way to extend types, interfaces, enums, and namespaces.

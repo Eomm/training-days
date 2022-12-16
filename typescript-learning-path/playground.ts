@@ -1,4 +1,7 @@
 
+import img from 'https://github.com/FrontendMasters/grid-flexbox-v2/blob/main/day-2-grid/15-final-project/end/img/donut5.jpg'
+
+console.log(img);
 
 function add(n1: number, n2: number) {
     return n1 + n2;
@@ -18,15 +21,23 @@ const car: {
 
 console.log(car.year);
 
+type Phone = {
+  number: string;
+  areaCode?: string;
+  prefix?: number
+}
+
 const phones: {
-  [k: string]: {
-    number: string;
-  } | null
+  [k: string]: Phone | null
 } = {
   fax: {
     number: "123456789"
   }
 }
+
+type stringProperties = keyof Phone & string;
+
+
 
 console.log(phones.fax.number);
 console.log(phones.email?.number);
@@ -40,3 +51,18 @@ if(isCar({})) {
 } else {
   console.log("Not a car");
 }
+
+// infer type from function (webpack example)
+// perfomance drawback here
+type ReturnType<T> = T extends {
+  new (arg: infer A, ...args: any[]): any
+} ? A : never;
+
+type PickWindowProp<
+  Keys extends keyof Window
+> = {
+  [k in Keys]: Window[k]
+}
+
+type Foo = number | never; // never disappears
+
