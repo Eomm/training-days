@@ -1,0 +1,16 @@
+{
+  "name": "typescript-learning-path",
+  "version": "1.0.0",
+  "description": "This section is a learning path for TypeScript, so it includes all the courses that I've taken on TypeScript.",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Manuel Spigolon <manuel.spigolon@nearform.com> (https://github.com/Eomm)",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}

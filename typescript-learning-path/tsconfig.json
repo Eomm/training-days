@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "es2017", // define the version of javascript output
+    "module": "commonjs", // define the module system output
+    "outDir": "./dist",
+    "noImplicitAny": true, // disallow implicit any
+  }
+}

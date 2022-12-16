@@ -7,3 +7,4 @@ My skill-up on frontend-masters! https://frontendmasters.com/
 | [Intermediate React, v4](https://frontendmasters.com/courses/intermediate-react-v4/) | [`intermediate-react-v4`](./intermediate-react-v4/)
 | [State Management in Pure React, v2](https://frontendmasters.com/courses/pure-react-state/) | [`pure-react-state-v2`](./pure-react-state-v2/)
 | [CSS Grid & Flexbox for Responsive Layouts, v2](https://frontendmasters.com/courses/css-grid-flexbox-v2/) | [`css-grid-flexbox-v2`](./css-grid-flexbox-v2/)
+| [TypeScript Fundamentals, v3](https://frontendmasters.com/courses/typescript-v3/) | [`typescript-learning-path`](./typescript-learning-path/)
