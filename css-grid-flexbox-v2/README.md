@@ -95,6 +95,7 @@ Who chooses the image to display, you or the browser?
   .wrapper {
     display: grid;
     gap: 10px;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns, 1 fraction of the available space */
   }
 
   .col-1 {
