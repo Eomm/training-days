@@ -7,19 +7,66 @@
 
 Foundation Models (FMs) are extensive deep learning models pre-trained using attention mechanisms on vast datasets. They can be adapted for various tasks, including content generation.
 
+A Foundation Model is a general architectural concept that forms the basis for a range of language models, while an LLM is a specific instance of a pre-trained model based on the foundation model architecture, fine-tuned for specific applications.
+
 Generative AI refers to methods that generate content using algorithms, often based on deep learning models such as Generative Adversarial Networks (GANs), Variational Auto-Encoders (VAEs), or Foundation Models (FMs).
 
-**GAN**: Generational Adversarial Network
-**VAE**: Variational Auto-Encoder
+Generative Visual Models:
+
+**GAN**: Generational Adversarial Network focus on adversarial training to produce realistic data.
+**VAE**: Variational Auto-Encoder uses probabilistic modeling to generate data that captures the underlying distribution of the training data.
+
+Generative Language Models:
+
+**LLM**: Large Language Models are based on the Transformer architecture and trained on large datasets. They are capable of generating text, answering questions, and performing other NLP tasks.
+
 
 ### LLM Architecture and Training
 
-1. **Input Data**: Large-scale input datasets, often in the order of terabytes.
-2. **Transformer Model**: Data is fed into a Transformer Model with a significant number of parameters.
-3. **Training**: The model is trained on a specific task, e.g., predicting the next word in a sentence, for a considerable period.
-4. **Foundation Model (FM)**: The trained model becomes a Foundation Model, capable of generalizing to various text-generation tasks. The model size can be substantial.
+Here are the steps to build an LLM:
+
+1. **Data Collection and Preprocessing**:
+   - Gather a massive amount of text data from diverse sources.
+   - Clean and preprocess the data, including tokenization, removing noise, and formatting.
+
+2. **Architecture Selection**:
+   - Choose a suitable architecture for your LLM, often based on _Transformer Model_ architectures.
+
+3. **Foundation Model Pretraining**:
+   - Utilize the collected and preprocessed data to pretrain a base model, often referred to as the Foundation Model.
+   - During pretraining, the model learns language patterns, grammar, and contextual understanding from the vast amount of text data.
+   - The Foundation Model captures a broad understanding of language.
+
+4. **Fine-Tuning for Downstream Tasks**:
+   - After pretraining, fine-tune the Foundation Model on specific tasks using labeled data.
+   - This step makes the model specialized for tasks like text generation, translation, summarization, and more.
+   - Fine-tuning adapts the general knowledge from the Foundation Model to specific tasks.
+
+5. **Task-Specific Adaptation**:
+   - Further refine the fine-tuned model for specific domains or applications if needed.
+   - Domain adaptation enhances the model's performance on targeted tasks.
+
+6. **Validation and Testing**:
+   - Evaluate the model's performance on validation and test datasets.
+   - Fine-tuning and adaptation are iterated based on evaluation results.
+
+7. **Deployment and Use**:
+   - Once the model meets performance criteria, deploy it for real-world applications.
+   - Users interact with the LLM by providing prompts or queries.
+
+8. **Continuous Monitoring and Improvement**:
+   - Continuously monitor the LLM's performance and user feedback.
+   - Refine the model and adapt to changing language patterns and user needs.
+
 
 ### Text Representations and Embeddings
+
+There are two main options to interract with LLMs:
+
+1. **Creating a Tailored LLM**: One approach involves crafting a LLM that is finely tuned to address your specific business task. A fine-tuned LLM excels in delivering task-specific outcomes, producing content that aligns precisely with your requirements.
+2. **Leveraging a Generic LLM with Embeddings**: Alternatively, you can opt for a more versatile strategy by employing a generic LLM and customizing it for your task using embeddings. By integrating these embeddings into the LLM's input, you guide the model to generate content that resonates with your domain.
+
+In general, the second option is more cost-effective and efficient.
 
 - **Embeddings**: Numerical representations of text, crucial for various NLP tasks.
 - **Weaviate Vector Database**: Used for managing and querying vector embeddings.
@@ -52,6 +99,7 @@ Embeddings can be visualized using tools like UMAP and Altair.
 Using LLMs is expensive, both in terms of time and money. The costs can be reduced by using a smaller model, a smaller dataset, or a smaller number of training epochs.
 Using an LLM service is also an option. Usually, the service is charged per tokens processed.
 Tokens are often ~4 characters: https://platform.openai.com/tokenizer
+
 
 ---
 
@@ -137,7 +185,8 @@ The steps are:
 1. **Document Loading**: Load documents from files or databases.
 2. **Document Splitting**: Normalize documents into sentence-based chunks.
 3. **Indexing**: Convert chunks into vectors and store in a vector database.
-4. **Retrieval**: Fetch most relevant chunks for queries from the vector database and get the answer from the LLM.
+4. **Retrieval**: Fetch most relevant chunks for queries from the vector database. It will be an the LLM input.
+5. **Inference**: Generate/Predict answers using the LLM.
 
 ### Document Loading
 
@@ -146,7 +195,7 @@ Load documents from files or databases, a well-covered area.
 
 ### Document Splitting
 
-Break documents into chunks considering context preservation. Splitting by sentences avoids model confusion.
+Break documents into chunks considering context preservation. Splitting by sentences avoids model confusion. Read more [splitting strategies](https://www.pinecone.io/learn/chunking-strategies/).
 
 A chunk comprises:
 - Chunk Size: Character count.

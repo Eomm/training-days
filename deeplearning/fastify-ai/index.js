@@ -21,15 +21,27 @@ async function run () {
   const store = await indexDocuments(splitted)
   console.log('Indexed documents')
 
-  const query = 'who are the fastify maintainers?'
+  const query = 'who are the fastify maintainers? List them separated by comma'
+
+  // Example 0: Simple retrieval
+  {
+    const answer = await retrievalWithEmbeddingsManually(query, store)
+    console.log(answer)
+  }
+
+  return
 
   // Example 1: Simple retrieval
-  // const howManyDocs = 2
-  // const similarDocs = await store.similaritySearch(query, howManyDocs)
-  // console.log(similarDocs)
+  {
+    const answer = await retrievalWithEmbeddings(query, store)
+    console.log(answer)
+  }
 
-  const answer = await retrieval(query, store)
-  console.log(answer)
+  // Example 2: Retrieval with Compressor
+  {
+    const answer = await retrievalWithCompressors(query, store)
+    console.log(answer)
+  }
 
   // todo: retrieval with metadata
   // https://js.langchain.com/docs/modules/data_connection/retrievers/how_to/vectorstore
@@ -44,8 +56,8 @@ async function loadDocuments () {
 
 async function splitDocuments (docs) {
   const splitter = RecursiveCharacterTextSplitter.fromLanguage('markdown', {
-    chunkSize: 150,
-    chunkOverlap: 15
+    chunkSize: 256,
+    chunkOverlap: 20
   })
   const splitted = await splitter.splitDocuments(docs)
   return splitted
@@ -63,9 +75,42 @@ async function indexDocuments (splitted) {
   return vectorStore
 }
 
-async function retrieval (query, vectorStore) {
+async function retrievalWithEmbeddingsManually (query, vectorStore) {
+  const howManyDocs = 2
+  const similarDocs = await vectorStore.similaritySearch(query, howManyDocs)
+  console.log(`Found ${similarDocs.length} similar documents`)
+
+  console.log({
+    xx: similarDocs[0]
+  })
+
+  return 'nope' // todo
+
   const model = new OpenAI({
-    // modelName: 'gpt-3.5-turbo',
+    modelName: 'gpt-3.5-turbo',
+    openAIApiKey: process.env.OPENAI_API_KEY
+  })
+
+  const res = await model.predict(query)
+  return res
+}
+
+async function retrievalWithEmbeddings (query, vectorStore) {
+  const model = new OpenAI({
+    modelName: 'gpt-3.5-turbo',
+    openAIApiKey: process.env.OPENAI_API_KEY
+  })
+
+  const retriever = vectorStore.asRetriever()
+
+  const chain = RetrievalQAChain.fromLLM(model, retriever)
+  const res = await chain.call({ query })
+  return res
+}
+
+async function retrievalWithCompressors (query, vectorStore) {
+  const model = new OpenAI({
+    modelName: 'gpt-3.5-turbo',
     openAIApiKey: process.env.OPENAI_API_KEY
   })
   const baseCompressor = LLMChainExtractor.fromLLM(model)
