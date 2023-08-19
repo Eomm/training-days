@@ -18,6 +18,8 @@ My skill-up on frontend-masters! https://frontendmasters.com/
 
 | Course | Repository |
 | ------ | ---------- |
+| [Introduction to Large Language Models](https://www.cloudskillsboost.google/course_templates/539) | [./deeplearning](./deeplearning/) |
 | [Large Language Models with Semantic Search](https://learn.deeplearning.ai/large-language-models-semantic-search) | [./deeplearning](./deeplearning/) |
 | [LangChain for LLM Application Development](https://learn.deeplearning.ai/langchain) | [./deeplearning](./deeplearning/) |
 | [LangChain Chat with Your Data](https://learn.deeplearning.ai/langchain-chat-with-your-data/) | [./deeplearning](./deeplearning/) |
+| [ChatGPT Prompt Engineering for Developers](https://learn.deeplearning.ai/chatgpt-prompt-eng/lesson/1/introduction) | [./deeplearning](./deeplearning/) |

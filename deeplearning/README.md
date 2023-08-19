@@ -221,3 +221,51 @@ Enhance results with:
 - **Compression**: Have LLM summarize relevant chunks for focused responses. It reduces the **Noise** and **Duplication**.
 
 Fine-tune results for accuracy and relevance.
+
+
+---
+
+
+## TLDR: Introduction to Large Language Models
+
+The AI magnitudes are:
+
+- ML: Machine Learning, that includes
+  - DL: Deep Learning, that includes
+    - LLM: Large Language Models, that are divided into types:
+      - Generic/Base: it predicts the next word.
+      - Instruction Tuned: predicts the response to the instructions given.
+      - Dialog Tuned: trained to have a dialog by predicting the next response.
+    - Generative AI
+
+When working with LLMs, you will focus on prompt design.
+
+**Prompt Design**: Prompts involve instructions and context passed to the LLM to achive a specific task.
+**Prompt Engineering**: practice of developing and optimizing prompts to effectively utilize LLMs.
+
+
+---
+
+
+## TLDR: ChatGPT Prompt Engineering for Developers
+
+**RLHF**: Reinforcement Learning for Humans Feedback.
+Helpful, Honest, Harmless.
+
+### Guidelines
+
+- Principle 1: Write clear and specific instructions
+  - Use delimiters to separate distinct parts of the input.
+  - Ask for specific output formats.
+  - Add assumptions and constraints checks.
+  - Few-shot prompting: use a few examples to guide the LLM.
+- Principle 2: Give the model time to "think"
+  - Specify the steps required to complete a task.
+  - Ask for specific output formats.
+  - Instruct the model to work out its own solution before rushing to a conclusion.
+
+### Model Limitations
+
+- Hallucination: the model generates false information.
+  - To limit it, ask to the model to find relevant information first and then answer the question.
+- Try "extract" instead of "summarize".
