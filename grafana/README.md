@@ -202,6 +202,7 @@ Key concepts:
 - Ideal customer should use Grafana for Visualization but facing scaling issues.
 - Thanos is not multi-tenant, it is a single-tenant solution.
 - AWS AMP is based on Cortex.
+- Adaptive Metrics: Grafana detect and reduce unused metrics, reducing costs.
 
 Common challenges:
 
