@@ -23,3 +23,9 @@ My skill-up on frontend-masters! https://frontendmasters.com/
 | [LangChain for LLM Application Development](https://learn.deeplearning.ai/langchain) | [./deeplearning](./deeplearning/) |
 | [LangChain Chat with Your Data](https://learn.deeplearning.ai/langchain-chat-with-your-data/) | [./deeplearning](./deeplearning/) |
 | [ChatGPT Prompt Engineering for Developers](https://learn.deeplearning.ai/chatgpt-prompt-eng/lesson/1/introduction) | [./deeplearning](./deeplearning/) |
+
+## Grafana
+
+| Course | Repository |
+| ------ | ---------- |
+| [Grafana Solution Architect Track](https://grafanalabs.docebosaas.com/partners/learn) | [./grafana](./grafana/) |
