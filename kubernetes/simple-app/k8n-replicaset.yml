@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: hello-node-rs
+  namespace: hello-namespace  # Specify the namespace here
+spec:
+  replicas: 3  # Number of replicas
+  selector:
+    matchLabels:
+      app: hello-node
+  template:
+    metadata:
+      labels:
+        app: hello-node
+    spec:
+      containers:
+      - name: hello-node
+        image: hello-node:v1
+        ports:
+        - containerPort: 3000

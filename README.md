@@ -29,3 +29,9 @@ My skill-up on frontend-masters! https://frontendmasters.com/
 | Course | Repository |
 | ------ | ---------- |
 | [Grafana Solution Architect Track](https://grafanalabs.docebosaas.com/partners/learn) | [./grafana](./grafana/) |
+
+## Kubernetes
+
+| Course | Repository |
+| ------ | ---------- |
+| _Online resources_ | [./kubernetes](./kubernetes/) |

@@ -1,0 +1,16 @@
+{
+  "name": "simple-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "build": "docker build -t hello-node:v1 .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fastify": "^5.1.0"
+  }
+}

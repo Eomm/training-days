@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-node-config
+  namespace: hello-namespace  # Specify the namespace here
+data:
+  APP_MESSAGE: "Hello from ConfigMap!"  # A configuration variable

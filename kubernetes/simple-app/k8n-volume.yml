@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-node-with-volume
+  namespace: hello-namespace  # Specify the namespace here
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-node
+  template:
+    metadata:
+      labels:
+        app: hello-node
+    spec:
+      containers:
+      - name: hello-node
+        image: hello-node:v1
+        ports:
+        - containerPort: 3099  # Make sure this matches the port your app listens on
+        volumeMounts:
+        - mountPath: /data
+          name: my-volume
+      volumes:
+      - name: my-volume
+        emptyDir: {}  # Temporary storage that lasts as long as the pod
