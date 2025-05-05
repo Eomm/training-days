@@ -522,3 +522,80 @@ The cost unit is an arbitrary unit that is used by PostgreSQL to estimate the co
 the cost to read a sequential page, the cost to read a random page, some CPU costs. It's made up of several different things and those are all tuneable.
 
 To optimize the query, you can compare the cost on the same system and the same data.
+
+## CTE: Common Table Expressions
+
+TODO
+
+## View
+
+Views are virtual tables that are defined by a query.
+They can be used to simplify complex queries and to provide a layer of abstraction over the underlying tables.
+
+You have a table like `bookmarks` that's being queried frequently for **historical statistics**.
+Recomputing aggregates over large volumes of old data every time is inefficient and
+we must improve the read performance by storing historical aggregates in a **materialized view**, and compute only the **recent data live**.
+
+A materialized view is a snapshot of the data at a point in time, and it can be refreshed to update the data.
+It is a physical table that stores the result of a query, and it can be indexed like a regular table.
+
+```sql
+CREATE MATERIALIZED VIEW bookmarks_rollup_historic AS (
+  SELECT saved_on, COUNT(*)
+  FROM bookmarks
+  WHERE saved_on < (CURRENT_DATE - INTERVAL '1' DAY)
+  GROUP BY saved_on
+);
+
+-- The query plan shows a sequential scan of the materialized view
+EXPLAIN SELECT * FROM bookmarks_rollup_historic;
+```
+
+If we want to get all the data, we must:
+
+```sql
+SELECT * FROM bookmarks_rollup_historic
+UNION ALL
+SELECT saved_on, COUNT(*)
+  FROM bookmarks
+  WHERE saved_on >= (CURRENT_DATE - INTERVAL '1' DAY)
+  GROUP BY saved_on;
+```
+
+But, for simplicity we can create a view on top of the materialized view and the live query:
+
+```sql
+CREATE VIEW bookmarks_rollup AS (
+  SELECT * FROM bookmarks_rollup_historic
+  UNION ALL
+  SELECT saved_on, COUNT(*)
+    FROM bookmarks
+    WHERE saved_on >= (CURRENT_DATE - INTERVAL '1' DAY)
+    GROUP BY saved_on
+);
+
+-- The query plan shows a sequential scan of the materialized view
+EXPLAIN SELECT * FROM bookmarks_rollup;
+```
+
+| Feature               | Regular View                 | Materialized View              |
+| --------------------- | ---------------------------- | ------------------------------ |
+| Data Freshness        | Always current               | May be stale                   |
+| Query Performance     | Slower for expensive queries | Fast (reads from disk)         |
+| Storage               | No                           | Yes                            |
+| Manual Refresh Needed | No                           | Yes                            |
+| Can be Indexed        | No                           | ✅ Yes                         |
+| Ideal For             | Live, lightweight queries    | Heavy, infrequent computations |
+
+
+### Refreshing the Materialized View
+
+A materialized view must be refreshed to update the data.
+It can be performed by running the query:
+
+```sql
+REFRESH MATERIALIZED VIEW bookmarks_rollup_historic;
+
+-- Optionally, use the CONCURRENTLY option to avoid read locks (requires a unique index):
+REFRESH MATERIALIZED VIEW CONCURRENTLY bookmarks_rollup_historic;
+```
