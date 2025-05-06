@@ -226,6 +226,123 @@ While JSONB is bigger than JSON, it is more efficient to query and index.
 The JSON data type is stored as a text string, while JSONB is stored in a binary format.
 For this reason, JSONB does not preserve the order of keys and it trims unnecessary whitespace.
 
+#### JSON I/O
+
+First let's see how we can validate different JSON types:
+
+```sql
+SELECT
+	val,
+	val is json,
+	val is json scalar,
+	val is json array,
+	val is json object,
+	val is json object with unique keys
+FROM ( 
+	VALUES
+		('123'),
+		('"abc"'),
+		('abc'),
+		('{"a":"b"}'),
+		('{a:"b"}'),
+		('[1,2]'),
+		('{"a":"b","a":"2"}')
+	) test(val);
+```
+
+To create a JSON object from scratch, we can use these syntaxes:
+
+```sql
+SELECT
+	to_jsonb('foo'::text),
+	jsonb_build_object(
+	'id', 123,
+	'name', 'Foo',
+	'acrive', true,
+	'roles', array['admin', 'editor']
+);
+
+SELECT row_to_json(u) as users_json
+	FROM (SELECT * FROM users WHERE id=1) u;
+
+-- This returns a single record (json_agg) with an array of objects
+SELECT json_agg(
+    json_build_object(
+      'id', id,
+      'email', email
+    )
+) FROM users WHERE id > 10;
+```
+
+To read JSON data, we can use the `->`, `->>` and `#>` operators:
+
+```sql
+SELECT
+  '{"a":"1","b":2}'::jsonb -> 'a', -- "1"
+  '{"a":"1","b":2}'::jsonb ->> 'a', -- 1
+  '{"a":{"b":"2"}}'::jsonb #> '{a,b}', -- "2"
+  '{"a":{"b":"2"}}'::jsonb #>> '{a,b}', -- 2
+  '{"a":[1,2,3]}'::json #>> '{a,0}', -- 1
+  '{"a":[1,2,3]}'::json #>> '{a,-1}', -- 3
+  '{"a":[1,2,3],"b":[4,5,6]}'::json #>> '{c,0}', -- NULL
+  jsonb_path_query('{"a":{"b":"2"}}'::jsonb, '$.a.b'), -- "2"
+  jsonb_path_query('{"a":{"b":"2"}}'::jsonb, '$.a.b') #>> '{}' -- 2
+;
+
+-- Explode JSON array to rows
+SELECT *
+	FROM jsonb_to_recordset('[{"a":"1","b":"foo"}]') as t(a int, b text);
+
+-- Trick to convert a JSON object to a recordset array
+SELECT *
+	FROM jsonb_to_recordset(jsonb_build_array('{"a":"1","b":"foo"}'::jsonb)) as t(a int, b text);
+```
+
+To update JSON data:
+
+```sql
+-- Remember
+SELECT json_scalar('foo')::jsonb; -- "foo"
+
+UPDATE config
+  -- Thinking on a prepared statement, the json_scalar avoid extra conversion or stringify operations
+  SET settings = jsonb_set(settings, '{theme}', json_scalar('dark')::jsonb)
+  WHERE id = 1;
+
+UPDATE orders
+  SET details = jsonb_set(details, '{items,0,price}', to_json(899)::jsonb)
+  WHERE id = 1;
+
+-- To delete a key from a JSON object:
+UPDATE config
+  SET settings = settings - 'theme'
+  WHERE id = 1;
+```
+
+#### JSON Indexes
+
+To index a JSONB column, we can use the B-tree index or the GIN index.
+The B-tree index performs well when:
+
+- It is created on a generated column
+- Or it is a functional index
+
+Functionally it is the same:
+
+```sql
+-- Generated column
+ALTER TABLE orders
+  ADD COLUMN customer_email TEXT GENERATED ALWAYS AS (details->'customer'->>'email'::text) STORED;
+CREATE INDEX orders_email_idx ON orders (customer_email);
+-- To use this index, we need to use the generated column in the query
+
+-- Functional index
+CREATE INDEX orders_json_email_idx ON orders (
+  ((details->'customer'->> 'email')::text)
+);
+```
+
+
 ### Arrays
 
 When should you use arrays VS a separate table?
@@ -479,6 +596,26 @@ It is faster than B-tree indexes for equality queries, but it is not as flexible
 The advantage is that it is faster to create and it uses less space because its key size are constant.
 
 
+### GIN Indexes
+
+GIN indexes are used for full-text search and for indexing JSONB data.
+It is an inverted index that stores the position of each word in the document.
+It is bigger and slower to create than B-tree indexes, but it is faster for searching.
+If the json blob are huge and keep changing, it is better to not use a GIN index.
+
+```sql
+-- It indexes the keys and values of the JSONB data
+CREATE INDEX idx_gin ON orders USING GIN (details);
+
+SELECT * FROM orders WHERE details @> '{"status": "shipped"}'; -- OK: the index is used
+SELECT * FROM orders WHERE details ? 'status'; -- OK: the index is used
+SELECT * FROM orders WHERE details ?& ARRAY['status', 'customer']; -- OK: the index is used
+
+-- This is a GIN index is smaller but it covers only a limited set of operations
+-- https://www.postgresql.org/docs/17/gin.html#GIN-BUILTIN-OPCLASSES
+CREATE INDEX idx_gin ON orders USING GIN (details jsonb_path_ops);
+```
+
 ## Query Plans
 
 Query plans are the way PostgreSQL decides how to execute a query.
@@ -525,7 +662,46 @@ To optimize the query, you can compare the cost on the same system and the same 
 
 ## CTE: Common Table Expressions
 
-TODO
+CTEs are temporary result sets that can be referenced within a `SELECT`, `INSERT`, `UPDATE`, or `DELETE` statement.
+It lets you break down complex queries into smaller, more manageable pieces.
+CTEs are defined using the `WITH` clause and they can be recursive or non-recursive.
+
+```sql
+WITH cte_name AS (
+  SELECT column1, column2
+  FROM table_name
+  WHERE condition
+)
+
+SELECT * FROM cte_name;
+
+-- More useful example:
+WITH all_users AS (
+  SELECT false as is_deleted, * FROM users
+  UNION ALL
+  SELECT true as is_deleted, * FROM deleted_users
+)
+
+-- The WHERE clause is applied to the CTE
+SELECT * FROM all_users WHERE first_name = 'John';
+```
+
+The CTE name is only visible inside the query that defines it and it can overlap with the table names.
+
+Postgres could decide to materialize the CTE, but it is not guaranteed.
+You can force its behavior by using the `MATERIALIZED` or `NOT MATERIALIZED` keywords.
+
+```sql
+WITH
+  cte_name AS MATERIALIZED (
+    SELECT 1
+  ),
+
+  -- Concatenating CTEs
+  cte_name_2 AS NOT MATERIALIZED (
+    SELECT 1
+  );
+```
 
 ## View
 
