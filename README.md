@@ -35,3 +35,9 @@ My skill-up on frontend-masters! https://frontendmasters.com/
 | Course | Repository |
 | ------ | ---------- |
 | _Online resources_ | [./kubernetes](./kubernetes/) |
+
+## PostgreSQL
+
+| Course | Repository |
+| ------ | ---------- |
+| [Mastering Postgres](https://masteringpostgres.com/) | [./postgresql](./postgresql/) |
