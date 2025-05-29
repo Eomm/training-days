@@ -1,6 +1,6 @@
 # Mastering PostgreSQL
 
-Postgres 
+[Mastering Postgres](https://masteringpostgres.com/).
 
 ## Data Types
 
