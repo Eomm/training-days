@@ -41,3 +41,10 @@ My skill-up on frontend-masters! https://frontendmasters.com/
 | Course | Repository |
 | ------ | ---------- |
 | [Mastering Postgres](https://masteringpostgres.com/) | [./postgresql](./postgresql/) |
+
+## AI Native Engineering
+
+| Course | Repository |
+| ------ | ---------- |
+| AINE Program (internal course) | [./aine](./aine/) |
+
