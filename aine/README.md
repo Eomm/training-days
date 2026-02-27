@@ -34,3 +34,6 @@ and let the `npx bmad-method install` command do the magic.
 
 It is considered the most comprehensive and complete approach to spec-driven development even though
 it is verbose.
+
+It is based on Agents/Personas that are in charge of different parts of the process,
+and it has a lot of steps that must be followed in order to get the best results.
