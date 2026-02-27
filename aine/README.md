@@ -31,3 +31,6 @@ and it is based on the idea of controlling the whole process from ideation and p
 
 To get it working, just follow the [offical tutorial](https://docs.bmad-method.org/tutorials/getting-started/)
 and let the `npx bmad-method install` command do the magic.
+
+It is considered the most comprehensive and complete approach to spec-driven development even though
+it is verbose.
