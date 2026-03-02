@@ -42,7 +42,7 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   # Epic 1: Working Application Foundation
   epic-1: in-progress
-  1-1-initialize-monorepo-workspace: ready-for-dev
+  1-1-initialize-monorepo-workspace: done
   1-2-backend-application-skeleton: ready-for-dev
   1-3-frontend-application-skeleton: ready-for-dev
   1-4-database-connection-migration-tooling: backlog

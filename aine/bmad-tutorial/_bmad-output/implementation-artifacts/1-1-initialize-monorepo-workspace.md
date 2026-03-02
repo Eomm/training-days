@@ -1,6 +1,6 @@
 # Story 1.1: Initialize Monorepo Workspace
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -17,38 +17,38 @@ so that frontend and backend can be developed and run as a unified project.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Create root workspace configuration (AC: 1, 2)
-  - [ ] Create `package.json` at root with `"workspaces": ["frontend", "backend"]`, `"private": true`, and convenience scripts (`install`, `dev`, `build`, `test`)
-  - [ ] Create `tsconfig.base.json` at root (see Dev Notes for exact content)
-  - [ ] Create `.gitignore` at root (node_modules, dist, .env)
+- [x] Task 1 — Create root workspace configuration (AC: 1, 2)
+  - [x] Create `package.json` at root with `"workspaces": ["frontend", "backend"]`, `"private": true`, and convenience scripts (`install`, `dev`, `build`, `test`)
+  - [x] Create `tsconfig.base.json` at root (see Dev Notes for exact content)
+  - [x] Create `.gitignore` at root (node_modules, dist, .env)
 
-- [ ] Task 2 — Initialize frontend workspace (AC: 1)
-  - [ ] Run `npm create vite@latest frontend -- --template react-ts` from repo root
-  - [ ] `cd frontend && npx shadcn@latest init` — use default settings (New York style, zinc base color, CSS variables)
-  - [ ] Confirm `frontend/package.json` is present and Vite + React 19 + TypeScript are listed as dependencies
-  - [ ] Create `frontend/.env.example` with content: `VITE_API_URL=http://localhost:3000`
-  - [ ] Verify `npm run dev` inside `frontend/` starts the Vite dev server without errors
+- [x] Task 2 — Initialize frontend workspace (AC: 1)
+  - [x] Run `npm create vite@latest frontend -- --template react-ts` from repo root
+  - [x] `cd frontend && npx shadcn@latest init` — use default settings (New York style, zinc base color, CSS variables)
+  - [x] Confirm `frontend/package.json` is present and Vite + React 19 + TypeScript are listed as dependencies
+  - [x] Create `frontend/.env.example` with content: `VITE_API_URL=http://localhost:3000`
+  - [x] Verify `npm run dev` inside `frontend/` starts the Vite dev server without errors
 
-- [ ] Task 3 — Initialize backend workspace (AC: 1)
-  - [ ] Run from repo root: `mkdir backend && cd backend && npm init -y`
-  - [ ] Install production deps: `npm install fastify@5 @fastify/cors @fastify/helmet @fastify/rate-limit @fastify/env drizzle-orm postgres`
-  - [ ] Install dev deps: `npm install -D typescript @types/node drizzle-kit`
-  - [ ] Run `npx tsc --init` inside `backend/` — then update `tsconfig.json` to extend `../tsconfig.base.json`
-  - [ ] Create `backend/.env.example` with content:
+- [x] Task 3 — Initialize backend workspace (AC: 1)
+  - [x] Run from repo root: `mkdir backend && cd backend && npm init -y`
+  - [x] Install production deps: `npm install fastify@5 @fastify/cors @fastify/helmet @fastify/rate-limit @fastify/env drizzle-orm postgres`
+  - [x] Install dev deps: `npm install -D typescript @types/node drizzle-kit`
+  - [x] Run `npx tsc --init` inside `backend/` — then update `tsconfig.json` to extend `../tsconfig.base.json`
+  - [x] Create `backend/.env.example` with content:
     ```
     DATABASE_URL=postgres://motivatodo:motivatodo@localhost:5432/motivatodo
     PORT=3000
     CORS_ORIGIN=http://localhost:5173
     ```
-  - [ ] Create stub `backend/src/server.ts` (empty entrypoint — will be implemented in Story 1.2)
-  - [ ] Verify `node --test` in `backend/` runs with zero test files found (no errors)
+  - [x] Create stub `backend/src/server.ts` (empty entrypoint — will be implemented in Story 1.2)
+  - [x] Verify `node --test` in `backend/` runs with zero test files found (no errors)
 
-- [ ] Task 4 — Create root README.md (AC: 4)
-  - [ ] Document: prerequisites (Node LTS, Docker), install (`npm install`), dev start instructions for frontend and backend, test commands for both workspaces
+- [x] Task 4 — Create root README.md (AC: 4)
+  - [x] Document: prerequisites (Node LTS, Docker), install (`npm install`), dev start instructions for frontend and backend, test commands for both workspaces
 
-- [ ] Task 5 — Smoke-test workspace linking
-  - [ ] Run `npm install` from root and confirm both `frontend/node_modules` and `backend/node_modules` are populated (or correctly symlinked via workspace hoisting)
-  - [ ] Run `npm run test --workspace=frontend` and `npm run test --workspace=backend` — both should exit cleanly (no test files yet is OK)
+- [x] Task 5 — Smoke-test workspace linking
+  - [x] Run `npm install` from root and confirm both `frontend/node_modules` and `backend/node_modules` are populated (or correctly symlinked via workspace hoisting)
+  - [x] Run `npm run test --workspace=frontend` and `npm run test --workspace=backend` — both should exit cleanly (no test files yet is OK)
 
 ## Dev Notes
 
@@ -188,10 +188,39 @@ Neither testing framework needs explicit setup in this story — the scaffolding
 
 ### Agent Model Used
 
-_to be filled by dev agent_
+Claude Sonnet 4.6 (GitHub Copilot)
 
 ### Debug Log References
 
+- shadcn init required Tailwind CSS v4 to be installed first (`tailwindcss @tailwindcss/vite`) and the `@` import alias configured in both `tsconfig.json` and `tsconfig.app.json` before `shadcn init -y --base-color zinc` succeeded.
+- Backend `package.json` scripts needed manual update after `npm install --workspace=backend` ran.
+- Frontend `vitest run` exits with code 1 on no test files by default — fixed with `--passWithNoTests` flag.
+- npm workspaces hoists dependencies to root `node_modules` — this is expected.
+
 ### Completion Notes List
 
+- All 5 tasks completed.
+- shadcn/ui initialized with New York style + zinc base color + CSS variables.
+- Both `npm run test:frontend` and `npm run test:backend` exit with code 0.
+- Frontend uses Tailwind CSS v4 with `@tailwindcss/vite` plugin.
+- Backend dev script uses `node --experimental-strip-types --watch` (no tsx/ts-node needed).
+
 ### File List
+
+- `package.json` (root)
+- `tsconfig.base.json` (root)
+- `.gitignore` (root)
+- `README.md` (root)
+- `frontend/` (Vite scaffold via `npm create vite@latest`)
+- `frontend/tsconfig.json` (path alias added)
+- `frontend/tsconfig.app.json` (extends base, bundler mode overrides)
+- `frontend/vite.config.ts` (Tailwind + path alias)
+- `frontend/src/index.css` (Tailwind v4 import + shadcn CSS vars)
+- `frontend/src/lib/utils.ts` (created by shadcn)
+- `frontend/components.json` (shadcn config)
+- `frontend/.env.example`
+- `backend/package.json`
+- `backend/tsconfig.json` (extends base)
+- `backend/.env.example`
+- `backend/src/server.ts` (stub)
+- `backend/test/README.md`
