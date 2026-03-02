@@ -47,7 +47,10 @@ export async function build(opts: FastifyServerOptions = {}): Promise<FastifyIns
 
   // Security plugins
   await app.register(helmet)
-  await app.register(cors, { origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173' })
+  await app.register(cors, {
+    origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  })
   await app.register(rateLimit, {
     max: 100,
     timeWindow: '1 minute',

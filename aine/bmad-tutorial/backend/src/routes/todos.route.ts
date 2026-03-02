@@ -68,7 +68,7 @@ export const todosRoute: FastifyPluginAsync = async (fastify) => {
         type: 'object',
         required: ['text'],
         properties: {
-          text: { type: 'string', minLength: 1 },
+          text: { type: 'string', minLength: 1, maxLength: 250 },
         },
       },
       response: {

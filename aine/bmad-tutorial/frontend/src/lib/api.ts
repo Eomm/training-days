@@ -6,7 +6,7 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   const userId = getUserId()
 
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    ...(init?.body !== undefined ? { 'Content-Type': 'application/json' } : {}),
     ...(init?.headers as Record<string, string> | undefined),
     ...(userId ? { 'X-User-Id': userId } : {}),
   }
