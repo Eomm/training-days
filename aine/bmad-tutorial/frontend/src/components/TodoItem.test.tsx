@@ -132,7 +132,7 @@ describe("TodoItem", () => {
     expect(screen.queryByText("Is this task still ongoing?")).toBeNull();
   });
 
-  it("applies opacity-0 with transition when fadingOut is true", () => {
+  it("applies opacity-0 and collapses height when fadingOut is true", () => {
     const { container } = render(
       <TodoItem
         todo={todo}
@@ -143,7 +143,8 @@ describe("TodoItem", () => {
     );
     const li = container.querySelector("li");
     expect(li?.className).toContain("opacity-0");
-    expect(li?.className).toContain("transition-opacity");
+    expect(li?.className).toContain("max-h-0");
+    expect(li?.className).toContain("transition-all");
   });
 
   it("applies opacity-100 when fadingOut is false", () => {

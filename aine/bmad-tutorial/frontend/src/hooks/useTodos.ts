@@ -13,12 +13,15 @@ export function useTodos(userId: string | null): {
   quote: string | null
   clearQuote: () => void
   lastDoneId: string | null
+  pendingQuote: string | null
+  showPendingQuote: () => void
   removeDoneTodo: () => void
 } {
   const [todos, setTodos] = useState<Todo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [quote, setQuote] = useState<string | null>(null)
+  const [pendingQuote, setPendingQuote] = useState<string | null>(null)
   const [lastDoneId, setLastDoneId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -71,6 +74,7 @@ export function useTodos(userId: string | null): {
     if (!previous) return
 
     setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, done: true } : t)))
+    setLastDoneId(id)
 
     try {
       const data = await apiFetch<{ todo: Todo; quote: string }>(
@@ -78,10 +82,10 @@ export function useTodos(userId: string | null): {
         { method: 'PATCH', body: JSON.stringify({ done: true }) },
       )
       setTodos((prev) => prev.map((t) => (t.id === id ? data.todo : t)))
-      setQuote(data.quote)
-      setLastDoneId(id)
+      setPendingQuote(data.quote)
     } catch (err) {
       setTodos((prev) => prev.map((t) => (t.id === id ? previous : t)))
+      setLastDoneId(null)
       setError(err instanceof Error ? err.message : 'Failed to update todo')
     }
   }
@@ -99,6 +103,13 @@ export function useTodos(userId: string | null): {
     }
   }
 
+  function showPendingQuote(): void {
+    if (pendingQuote) {
+      setQuote(pendingQuote)
+      setPendingQuote(null)
+    }
+  }
+
   function removeDoneTodo(): void {
     if (lastDoneId) {
       setTodos((prev) => prev.filter((t) => t.id !== lastDoneId))
@@ -106,5 +117,5 @@ export function useTodos(userId: string | null): {
     }
   }
 
-  return { todos, isLoading, error, addTodo, markDone, deleteTodo, quote, clearQuote: () => setQuote(null), lastDoneId, removeDoneTodo }
+  return { todos, isLoading, error, addTodo, markDone, deleteTodo, quote, clearQuote: () => setQuote(null), lastDoneId, pendingQuote, showPendingQuote, removeDoneTodo }
 }

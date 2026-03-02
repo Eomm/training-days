@@ -28,8 +28,10 @@ export function TodoItem({
 
   return (
     <li
-      className={`flex flex-col gap-1 p-3 rounded-md ${borderClass} ${agingClass} transition-opacity duration-500 ${fadingOut ? "opacity-0" : "opacity-100"}`}
-      onTransitionEnd={fadingOut ? onFadeComplete : undefined}
+      className={`flex flex-col gap-1 rounded-md ${borderClass} ${agingClass} transition-all duration-500 ${fadingOut ? "opacity-0 max-h-0 p-0 m-0 overflow-hidden border-0" : "opacity-100 max-h-40 p-3"}`}
+      onTransitionEnd={(e) => {
+        if (fadingOut && e.propertyName === "opacity") onFadeComplete?.();
+      }}
     >
       <div className="flex items-center gap-3">
         <button

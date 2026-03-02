@@ -1,5 +1,5 @@
 // frontend/src/pages/HomePage.tsx
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useGuestIdentity } from "../hooks/useGuestIdentity.ts";
 import { useTodos } from "../hooks/useTodos.ts";
 import { TodoInput } from "../components/TodoInput.tsx";
@@ -18,18 +18,23 @@ export function HomePage() {
     clearQuote,
     lastDoneId,
     removeDoneTodo,
+    pendingQuote,
+    showPendingQuote,
   } = useTodos(userId);
-  const [fadingOutId, setFadingOutId] = useState<string | null>(null);
-
-  const handleQuoteClose = useCallback(() => {
-    setFadingOutId(lastDoneId);
-    clearQuote();
-  }, [lastDoneId, clearQuote]);
+  const [fadeComplete, setFadeComplete] = useState(false);
 
   const handleFadeComplete = useCallback(() => {
     removeDoneTodo();
-    setFadingOutId(null);
+    setFadeComplete(true);
   }, [removeDoneTodo]);
+
+  // Show the quote once both fade is complete and the API has responded
+  useEffect(() => {
+    if (fadeComplete && pendingQuote) {
+      showPendingQuote();
+      setFadeComplete(false);
+    }
+  }, [fadeComplete, pendingQuote, showPendingQuote]);
 
   return (
     <div className="flex flex-col items-center gap-4 p-8 max-w-xl mx-auto">
@@ -40,10 +45,10 @@ export function HomePage() {
         isLoading={isLoading}
         onDone={markDone}
         onDelete={deleteTodo}
-        fadingOutId={fadingOutId}
+        fadingOutId={lastDoneId}
         onFadeComplete={handleFadeComplete}
       />
-      <QuoteModal quote={quote} onClose={handleQuoteClose} />
+      <QuoteModal quote={quote} onClose={clearQuote} />
     </div>
   );
 }

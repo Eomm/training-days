@@ -103,7 +103,8 @@ describe('useTodos — markDone', () => {
     })
 
     expect(result.current.todos[0].done).toBe(true)
-    expect(result.current.quote).toBe('Great job!')
+    expect(result.current.pendingQuote).toBe('Great job!')
+    expect(result.current.quote).toBeNull()
     expect(result.current.lastDoneId).toBe('todo-1')
   })
 
@@ -125,7 +126,7 @@ describe('useTodos — markDone', () => {
     expect(result.current.error).toMatch(/HTTP 403/)
   })
 
-  it('removeDoneTodo removes the last-done item from the list', async () => {
+  it('removeDoneTodo removes the last-done item and showPendingQuote reveals the quote', async () => {
     const todo = makeTodo({ id: 'todo-1', done: false })
     const updatedTodo = { ...todo, done: true }
     vi.stubGlobal('fetch', vi.fn()
@@ -141,13 +142,18 @@ describe('useTodos — markDone', () => {
     })
 
     expect(result.current.lastDoneId).toBe('todo-1')
+    expect(result.current.pendingQuote).toBe('Nice!')
+    expect(result.current.quote).toBeNull()
 
     act(() => {
       result.current.removeDoneTodo()
+      result.current.showPendingQuote()
     })
 
     expect(result.current.todos).toHaveLength(0)
     expect(result.current.lastDoneId).toBeNull()
+    expect(result.current.quote).toBe('Nice!')
+    expect(result.current.pendingQuote).toBeNull()
   })
 })
 
