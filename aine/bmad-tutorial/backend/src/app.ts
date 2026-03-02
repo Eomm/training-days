@@ -20,6 +20,7 @@ const envSchema = {
     PORT: { type: 'string', default: '3000' },
     CORS_ORIGIN: { type: 'string', default: 'http://localhost:5173' },
     LOG_LEVEL: { type: 'string', default: 'info' },
+    RATE_LIMIT_MAX: { type: 'string', default: '100' },
   },
 }
 
@@ -52,7 +53,7 @@ export async function build(opts: FastifyServerOptions = {}): Promise<FastifyIns
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   })
   await app.register(rateLimit, {
-    max: 100,
+    max: Number(process.env.RATE_LIMIT_MAX ?? 100),
     timeWindow: '1 minute',
     skipOnError: true,
     allowList: ['/health'],
@@ -69,13 +70,13 @@ export async function build(opts: FastifyServerOptions = {}): Promise<FastifyIns
   // Routes
 
   // No-auth routes:
-  app.register(async function plugin(app, opts) {
+  app.register(async function plugin(app) {
     await app.register(healthRoute)
     await app.register(guestRoute)
   })
 
   // Auth routes:
-  app.register(async function plugin(app, opts) {
+  app.register(async function plugin(app) {
     app.addHook('onRequest', validateUserIdHook)
     await app.register(todosRoute)
   })

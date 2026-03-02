@@ -83,3 +83,7 @@ development_status:
   # Epic 6: Retrospective Housekeeping
   epic-6: done
   6-1-retrospective-leftovers: done
+
+  # Epic 7: Developer Tooling & Code Quality
+  epic-7: done
+  7-1-opinionated-linter-be-fe: done
