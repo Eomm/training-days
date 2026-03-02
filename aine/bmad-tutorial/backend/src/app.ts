@@ -7,8 +7,10 @@ import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
 import fastifyEnv from '@fastify/env'
 import dbPlugin from './plugins/db.plugin.ts'
+import { validateUserIdHook } from './plugins/auth.plugin.ts'
 import { healthRoute } from './routes/health.route.ts'
 import { guestRoute } from './routes/guest.route.ts'
+import { todosRoute } from './routes/todos.route.ts'
 
 const envSchema = {
   type: 'object',
@@ -62,8 +64,18 @@ export async function build(opts: FastifyServerOptions = {}): Promise<FastifyIns
   await app.register(swaggerUi, { routePrefix: '/documentation' })
 
   // Routes
-  await app.register(healthRoute)
-  await app.register(guestRoute)
+
+  // No-auth routes:
+  app.register(async function plugin(app, opts) {
+    await app.register(healthRoute)
+    await app.register(guestRoute)
+  })
+
+  // Auth routes:
+  app.register(async function plugin(app, opts) {
+    app.addHook('onRequest', validateUserIdHook)
+    await app.register(todosRoute)
+  })
 
   return app
 }

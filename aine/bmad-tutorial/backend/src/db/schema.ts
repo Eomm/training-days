@@ -4,7 +4,7 @@
 //   - Story 2.1: `users` table ✅
 //   - Story 3.1: `todos` table (pgTable with id UUID, userId FK, text, done bool, createdAt timestamp)
 
-import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, uuid, text, timestamp, boolean } from 'drizzle-orm/pg-core'
 
 // Story 2.1: users table
 export const users = pgTable('users', {
@@ -13,4 +13,13 @@ export const users = pgTable('users', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 
-// Story 3.1: todos table added here
+// Story 3.1: todos table
+export const todos = pgTable('todos', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id),
+  text: text('text').notNull(),
+  done: boolean('done').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})

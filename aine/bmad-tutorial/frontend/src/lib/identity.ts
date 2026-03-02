@@ -1,13 +1,10 @@
 // frontend/src/lib/identity.ts
-// Real implementation in Story 2.3
-
-// @ts-ignore -- KEY used by getUserId/setUserId in Story 2.3 implementation
-const KEY = "motivatodo_user_id"; // exact localStorage key — never change this string
+const KEY = 'motivatodo_user_id' // exact localStorage key — never change this string
 
 export function getUserId(): string | null {
-  throw new Error("getUserId not implemented yet — Story 2.3");
+  return localStorage.getItem(KEY)
 }
 
-export function setUserId(_id: string): void {
-  throw new Error("setUserId not implemented yet — Story 2.3");
+export function setUserId(id: string): void {
+  localStorage.setItem(KEY, id)
 }

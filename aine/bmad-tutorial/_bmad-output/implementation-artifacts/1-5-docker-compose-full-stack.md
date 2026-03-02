@@ -1,6 +1,6 @@
 # Story 1.5: Docker Compose Full Stack
 
-Status: review
+Status: done
 
 ## Story
 

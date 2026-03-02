@@ -13,7 +13,7 @@ test('POST /guest returns 201 with a valid UUID userId', async (t) => {
   const app = await build({ logger: false })
   t.after(() => app.close())
 
-  const res = await app.inject({ method: 'POST', url: '/guest' })
+  const res = await app.inject({ method: 'POST', url: '/guest', headers: { 'content-type': 'application/json' }, payload: '{}' })
   assert.equal(res.statusCode, 201)
   const body = res.json<{ userId: string }>()
   assert.ok(typeof body.userId === 'string')
@@ -24,8 +24,9 @@ test('POST /guest called twice returns two different userIds', async (t) => {
   const app = await build({ logger: false })
   t.after(() => app.close())
 
-  const res1 = await app.inject({ method: 'POST', url: '/guest' })
-  const res2 = await app.inject({ method: 'POST', url: '/guest' })
+  const opts = { method: 'POST' as const, url: '/guest', headers: { 'content-type': 'application/json' }, payload: '{}' }
+  const res1 = await app.inject(opts)
+  const res2 = await app.inject(opts)
   assert.equal(res1.statusCode, 201)
   assert.equal(res2.statusCode, 201)
   const id1 = res1.json<{ userId: string }>().userId
@@ -37,7 +38,20 @@ test('POST /guest response body contains only userId', async (t) => {
   const app = await build({ logger: false })
   t.after(() => app.close())
 
-  const res = await app.inject({ method: 'POST', url: '/guest' })
+  const res = await app.inject({ method: 'POST', url: '/guest', headers: { 'content-type': 'application/json' }, payload: '{}' })
   const body = res.json<Record<string, unknown>>()
   assert.deepEqual(Object.keys(body).sort(), ['userId'])
+})
+
+test('POST /guest with extra properties in body returns 400', async (t) => {
+  const app = await build({ logger: false })
+  t.after(() => app.close())
+
+  const res = await app.inject({
+    method: 'POST',
+    url: '/guest',
+    headers: { 'content-type': 'application/json' },
+    payload: JSON.stringify({ sneaky: 'field' }),
+  })
+  assert.equal(res.statusCode, 400)
 })

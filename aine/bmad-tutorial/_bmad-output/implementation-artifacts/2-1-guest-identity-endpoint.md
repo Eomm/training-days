@@ -1,6 +1,6 @@
 # Story 2.1: Guest Identity Endpoint
 
-Status: review
+Status: done
 
 ## Story
 

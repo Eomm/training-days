@@ -16,6 +16,10 @@ export const guestRoute: FastifyPluginAsync = async (fastify) => {
       summary: 'Create anonymous guest user',
       description:
         'Creates a new anonymous user record. Called by the client on first visit when no userId exists in localStorage. Exempt from X-User-Id header requirement.',
+      body: {
+        type: 'object',
+        additionalProperties: false,
+      },
       response: {
         201: {
           type: 'object',
