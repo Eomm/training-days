@@ -1,6 +1,6 @@
 # Story 3.4: Delete Todo
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -21,49 +21,49 @@ So that I can remove tasks that are no longer relevant.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Add `DELETE /todos/:id` to `backend/src/routes/todos.route.ts` (AC: 1, 2, 3, 7)
-  - [ ] Add `DELETE /todos/:id` route handler to the existing `todosRoute` plugin
-  - [ ] Parse params: `id` (string/uuid)
-  - [ ] Read `userId` from `request.headers['x-user-id'] as string`
-  - [ ] Fetch existing todo; if not found → 404; if `todo.userId !== userId` → 403
-  - [ ] Delete: `fastify.db.delete(todos).where(eq(todos.id, id))`
-  - [ ] Return `reply.status(204).send()` — NO body (204 contract)
-  - [ ] See Dev Notes for exact handler
+- [x] Task 1 — Add `DELETE /todos/:id` to `backend/src/routes/todos.route.ts` (AC: 1, 2, 3, 7)
+  - [x] Add `DELETE /todos/:id` route handler to the existing `todosRoute` plugin
+  - [x] Parse params: `id` (string/uuid)
+  - [x] Read `userId` from `request.headers['x-user-id'] as string`
+  - [x] Fetch existing todo; if not found → 404; if `todo.userId !== userId` → 403
+  - [x] Delete: `fastify.db.delete(todos).where(eq(todos.id, id))`
+  - [x] Return `reply.status(204).send()` — NO body (204 contract)
+  - [x] See Dev Notes for exact handler
 
-- [ ] Task 2 — Write backend tests for DELETE /todos/:id (AC: 1, 2, 3, 8)
-  - [ ] Add to `backend/test/todos.route.test.ts`
-  - [ ] Test: `DELETE /todos/:id` own todo returns 204 with empty body
-  - [ ] Test: after delete, `GET /todos` no longer includes the deleted todo
-  - [ ] Test: delete non-existent todo returns 404
-  - [ ] Test: delete another user's todo returns 403
-  - [ ] Run full suite — all pass
+- [x] Task 2 — Write backend tests for DELETE /todos/:id (AC: 1, 2, 3, 8)
+  - [x] Add to `backend/test/todos.route.test.ts`
+  - [x] Test: `DELETE /todos/:id` own todo returns 204 with empty body
+  - [x] Test: after delete, `GET /todos` no longer includes the deleted todo
+  - [x] Test: delete non-existent todo returns 404
+  - [x] Test: delete another user's todo returns 403
+  - [x] Run full suite — all pass
 
-- [ ] Task 3 — Add `deleteTodo` to `frontend/src/hooks/useTodos.ts` (AC: 4, 5)
-  - [ ] Add `deleteTodo(id: string): Promise<void>` function
-  - [ ] Save snapshot of current `todos` for rollback
-  - [ ] Optimistically remove the todo from state immediately
-  - [ ] Call `apiFetch<void>('/todos/' + id, { method: 'DELETE' })`
-  - [ ] On success: nothing to update (already removed)
-  - [ ] On error: restore the snapshot + set `error` state
-  - [ ] Return `{ todos, isLoading, error, addTodo, markDone, deleteTodo, quote, clearQuote }` from hook
-  - [ ] See Dev Notes for exact implementation
+- [x] Task 3 — Add `deleteTodo` to `frontend/src/hooks/useTodos.ts` (AC: 4, 5)
+  - [x] Add `deleteTodo(id: string): Promise<void>` function
+  - [x] Save snapshot of current `todos` for rollback
+  - [x] Optimistically remove the todo from state immediately
+  - [x] Call `apiFetch<void>('/todos/' + id, { method: 'DELETE' })`
+  - [x] On success: nothing to update (already removed)
+  - [x] On error: restore the snapshot + set `error` state
+  - [x] Return `{ todos, isLoading, error, addTodo, markDone, deleteTodo, quote, clearQuote }` from hook
+  - [x] See Dev Notes for exact implementation
 
-- [ ] Task 4 — Update `frontend/src/components/TodoItem.tsx` with delete button (AC: 6)
-  - [ ] Add prop `onDelete: (id: string) => void`
-  - [ ] Add a delete button (trash icon or "×") on the right side of the item
-  - [ ] On click: call `onDelete(todo.id)`
-  - [ ] Use `lucide-react` `Trash2` icon (already in dependencies)
-  - [ ] See Dev Notes for exact updated `TodoItem` content
+- [x] Task 4 — Update `frontend/src/components/TodoItem.tsx` with delete button (AC: 6)
+  - [x] Add prop `onDelete: (id: string) => void`
+  - [x] Add a delete button (trash icon or "×") on the right side of the item
+  - [x] On click: call `onDelete(todo.id)`
+  - [x] Use `lucide-react` `Trash2` icon (already in dependencies)
+  - [x] See Dev Notes for exact updated `TodoItem` content
 
-- [ ] Task 5 — Wire `deleteTodo` through `TodoList` and `HomePage.tsx` (AC: 4, 5, 6)
-  - [ ] Update `TodoList` props to accept `onDelete: (id: string) => void`
-  - [ ] Pass `onDelete` down to each `<TodoItem>`
-  - [ ] In `HomePage.tsx`: destructure `deleteTodo` from `useTodos` and pass as `onDelete` to `<TodoList>`
+- [x] Task 5 — Wire `deleteTodo` through `TodoList` and `HomePage.tsx` (AC: 4, 5, 6)
+  - [x] Update `TodoList` props to accept `onDelete: (id: string) => void`
+  - [x] Pass `onDelete` down to each `<TodoItem>`
+  - [x] In `HomePage.tsx`: destructure `deleteTodo` from `useTodos` and pass as `onDelete` to `<TodoList>`
 
-- [ ] Task 6 — Write frontend tests (AC: 8)
-  - [ ] Update `frontend/src/components/TodoItem.test.tsx`: clicking delete button calls `onDelete` with correct id
-  - [ ] Update `useTodos.test.ts`: test `deleteTodo` optimistic removal and rollback on error
-  - [ ] Run `npm run test --workspace=frontend` — all pass
+- [x] Task 6 — Write frontend tests (AC: 8)
+  - [x] Update `frontend/src/components/TodoItem.test.tsx`: clicking delete button calls `onDelete` with correct id
+  - [x] Update `useTodos.test.ts`: test `deleteTodo` optimistic removal and rollback on error
+  - [x] Run `npm run test --workspace=frontend` — all pass
 
 ## Dev Notes
 
@@ -97,22 +97,18 @@ fastify.delete(
       .limit(1);
 
     if (!existing) {
-      return reply
-        .status(404)
-        .send({
-          statusCode: 404,
-          error: "Not Found",
-          message: "Todo not found",
-        });
+      return reply.status(404).send({
+        statusCode: 404,
+        error: "Not Found",
+        message: "Todo not found",
+      });
     }
     if (existing.userId !== userId) {
-      return reply
-        .status(403)
-        .send({
-          statusCode: 403,
-          error: "Forbidden",
-          message: "Not your todo",
-        });
+      return reply.status(403).send({
+        statusCode: 403,
+        error: "Forbidden",
+        message: "Not your todo",
+      });
     }
 
     await fastify.db.delete(todos).where(eq(todos.id, id));
@@ -259,8 +255,29 @@ frontend/src/
 
 ### Agent Model Used
 
+Claude Sonnet 4.6
+
 ### Debug Log References
+
+N/A
 
 ### Completion Notes List
 
+- DELETE /todos/:id route added with ownership check (403), not-found (404), returns 204 No Content
+- api.ts updated to handle 204 response (skip response.json() call)
+- deleteTodo optimistic pattern in useTodos: immediate filter-out, snapshot rollback on error
+- TodoItem updated with onDelete prop and Trash2 icon button
+- TodoList updated to pass onDelete down to each TodoItem
+- HomePage wired with deleteTodo
+- Code review fix: reply.status(404 as any) and reply.status(403 as any) → reply.status(404/403) in DELETE handler
+
 ### File List
+
+- backend/src/routes/todos.route.ts
+- backend/test/todos.route.test.ts
+- frontend/src/lib/api.ts
+- frontend/src/hooks/useTodos.ts
+- frontend/src/components/TodoItem.tsx
+- frontend/src/components/TodoList.tsx
+- frontend/src/pages/HomePage.tsx
+- frontend/src/components/TodoItem.test.tsx

@@ -12,11 +12,14 @@ export function useTodos(userId: string | null): {
   deleteTodo: (id: string) => Promise<void>
   quote: string | null
   clearQuote: () => void
+  lastDoneId: string | null
+  removeDoneTodo: () => void
 } {
   const [todos, setTodos] = useState<Todo[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const [quote, setQuote] = useState<string | null>(null)
+  const [lastDoneId, setLastDoneId] = useState<string | null>(null)
 
   useEffect(() => {
     if (userId === null) return
@@ -76,6 +79,7 @@ export function useTodos(userId: string | null): {
       )
       setTodos((prev) => prev.map((t) => (t.id === id ? data.todo : t)))
       setQuote(data.quote)
+      setLastDoneId(id)
     } catch (err) {
       setTodos((prev) => prev.map((t) => (t.id === id ? previous : t)))
       setError(err instanceof Error ? err.message : 'Failed to update todo')
@@ -95,5 +99,12 @@ export function useTodos(userId: string | null): {
     }
   }
 
-  return { todos, isLoading, error, addTodo, markDone, deleteTodo, quote, clearQuote: () => setQuote(null) }
+  function removeDoneTodo(): void {
+    if (lastDoneId) {
+      setTodos((prev) => prev.filter((t) => t.id !== lastDoneId))
+      setLastDoneId(null)
+    }
+  }
+
+  return { todos, isLoading, error, addTodo, markDone, deleteTodo, quote, clearQuote: () => setQuote(null), lastDoneId, removeDoneTodo }
 }

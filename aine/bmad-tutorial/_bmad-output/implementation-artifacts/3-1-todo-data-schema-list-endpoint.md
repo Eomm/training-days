@@ -1,6 +1,6 @@
 # Story 3.1: Todo Data Schema & List Endpoint
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -22,71 +22,71 @@ So that I can immediately see everything I need to do.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Add `todos` table to `backend/src/db/schema.ts` (AC: 3)
-  - [ ] Import `boolean` from `drizzle-orm/pg-core` (add to existing import line)
-  - [ ] Define and export `todos` table with exact columns from Dev Notes
-  - [ ] Use `defaultRandom()` for `id` — the route does NOT generate the UUID (unlike `users`)
-  - [ ] Use `.references(() => users.id)` for the FK — import `users` is already in the file
-  - [ ] Do NOT remove the `users` table or any existing imports
+- [x] Task 1 — Add `todos` table to `backend/src/db/schema.ts` (AC: 3)
+  - [x] Import `boolean` from `drizzle-orm/pg-core` (add to existing import line)
+  - [x] Define and export `todos` table with exact columns from Dev Notes
+  - [x] Use `defaultRandom()` for `id` — the route does NOT generate the UUID (unlike `users`)
+  - [x] Use `.references(() => users.id)` for the FK — import `users` is already in the file
+  - [x] Do NOT remove the `users` table or any existing imports
 
-- [ ] Task 2 — Run DB migration (AC: 3)
-  - [ ] Run `npm run db:push --workspace=backend` to apply the new `todos` table to the local postgres instance
-  - [ ] Verify no errors — Drizzle will create the table and FK constraint
+- [x] Task 2 — Run DB migration (AC: 3)
+  - [x] Run `npm run db:push --workspace=backend` to apply the new `todos` table to the local postgres instance
+  - [x] Verify no errors — Drizzle will create the table and FK constraint
 
-- [ ] Task 3 — Create `backend/src/routes/todos.route.ts` with `GET /todos` (AC: 1, 2, 4, 5, 6)
-  - [ ] Export `todosRoute: FastifyPluginAsync`
-  - [ ] Register `GET /todos` with Swagger schema (tags: `['todos']`, response shape: array of todo objects)
-  - [ ] Read `userId` from `request.headers['x-user-id']` (guaranteed non-null by `validateUserIdHook`)
-  - [ ] Query: `fastify.db.select().from(todos).where(eq(todos.userId, userId)).orderBy(desc(todos.createdAt))`
-  - [ ] Map result rows to camelCase response shape (see Dev Notes)
-  - [ ] Return `reply.send(mappedTodos)` — empty array when none found
-  - [ ] See Dev Notes for exact file content
+- [x] Task 3 — Create `backend/src/routes/todos.route.ts` with `GET /todos` (AC: 1, 2, 4, 5, 6)
+  - [x] Export `todosRoute: FastifyPluginAsync`
+  - [x] Register `GET /todos` with Swagger schema (tags: `['todos']`, response shape: array of todo objects)
+  - [x] Read `userId` from `request.headers['x-user-id']` (guaranteed non-null by `validateUserIdHook`)
+  - [x] Query: `fastify.db.select().from(todos).where(eq(todos.userId, userId)).orderBy(desc(todos.createdAt))`
+  - [x] Map result rows to camelCase response shape (see Dev Notes)
+  - [x] Return `reply.send(mappedTodos)` — empty array when none found
+  - [x] See Dev Notes for exact file content
 
-- [ ] Task 4 — Register `todosRoute` in `backend/src/app.ts` (AC: 1)
-  - [ ] Import `todosRoute` from `./routes/todos.route.ts`
-  - [ ] Register after `guestRoute`: `await app.register(todosRoute)`
-  - [ ] Do NOT change any other registrations
+- [x] Task 4 — Register `todosRoute` in `backend/src/app.ts` (AC: 1)
+  - [x] Import `todosRoute` from `./routes/todos.route.ts`
+  - [x] Register after `guestRoute`: `await app.register(todosRoute)`
+  - [x] Do NOT change any other registrations
 
-- [ ] Task 5 — Write backend tests (AC: 9)
-  - [ ] Create `backend/test/todos.route.test.ts`
-  - [ ] `before()`: seed process.env, register a test route helper
-  - [ ] Test 1: `GET /todos` with valid userId returns `200` and empty array when no todos exist
-  - [ ] Test 2: `GET /todos` without `X-User-Id` returns `400` (regression: auth hook still active)
-  - [ ] Test 3: `GET /todos` returns only todos for the requesting user (not another user's todos)
-  - [ ] Pattern: create user via `POST /guest`, then call `GET /todos`
-  - [ ] See Dev Notes for exact test content
+- [x] Task 5 — Write backend tests (AC: 9)
+  - [x] Create `backend/test/todos.route.test.ts`
+  - [x] `before()`: seed process.env, register a test route helper
+  - [x] Test 1: `GET /todos` with valid userId returns `200` and empty array when no todos exist
+  - [x] Test 2: `GET /todos` without `X-User-Id` returns `400` (regression: auth hook still active)
+  - [x] Test 3: `GET /todos` returns only todos for the requesting user (not another user's todos)
+  - [x] Pattern: create user via `POST /guest`, then call `GET /todos`
+  - [x] See Dev Notes for exact test content
 
-- [ ] Task 6 — Create `frontend/src/hooks/useTodos.ts` (AC: 7)
-  - [ ] Export `useTodos(userId: string | null): { todos: Todo[]; isLoading: boolean; error: string | null }`
-  - [ ] If `userId` is null → return `{ todos: [], isLoading: false, error: null }` immediately (skip fetch)
-  - [ ] `useEffect([userId])`: call `apiFetch<Todo[]>('/todos')` when userId is set
-  - [ ] Set `isLoading = true` before fetch, `false` in finally block
-  - [ ] On error: set `error` state with `err.message`
-  - [ ] See Dev Notes for exact implementation
+- [x] Task 6 — Create `frontend/src/hooks/useTodos.ts` (AC: 7)
+  - [x] Export `useTodos(userId: string | null): { todos: Todo[]; isLoading: boolean; error: string | null }`
+  - [x] If `userId` is null → return `{ todos: [], isLoading: false, error: null }` immediately (skip fetch)
+  - [x] `useEffect([userId])`: call `apiFetch<Todo[]>('/todos')` when userId is set
+  - [x] Set `isLoading = true` before fetch, `false` in finally block
+  - [x] On error: set `error` state with `err.message`
+  - [x] See Dev Notes for exact implementation
 
-- [ ] Task 7 — Create `frontend/src/components/SkeletonList.tsx` (AC: 8)
-  - [ ] Renders 3 placeholder skeleton rows using shadcn `Skeleton` component
-  - [ ] Props: none (always renders 3 rows)
-  - [ ] See Dev Notes for exact content
+- [x] Task 7 — Create `frontend/src/components/SkeletonList.tsx` (AC: 8)
+  - [x] Renders 3 placeholder skeleton rows using shadcn `Skeleton` component
+  - [x] Props: none (always renders 3 rows)
+  - [x] See Dev Notes for exact content
 
-- [ ] Task 8 — Create `frontend/src/components/TodoList.tsx` (AC: 8)
-  - [ ] Props: `{ todos: Todo[]; isLoading: boolean }`
-  - [ ] If `isLoading` → render `<SkeletonList />`
-  - [ ] If `todos.length === 0` → render empty state: `<p>No tasks yet. Add one above!</p>`
-  - [ ] Otherwise → render `<ul>` with one `<li>` per todo showing `todo.text`
-  - [ ] See Dev Notes — `TodoItem` is added in Story 3.2; use a plain `<li>` for now
+- [x] Task 8 — Create `frontend/src/components/TodoList.tsx` (AC: 8)
+  - [x] Props: `{ todos: Todo[]; isLoading: boolean }`
+  - [x] If `isLoading` → render `<SkeletonList />`
+  - [x] If `todos.length === 0` → render empty state: `<p>No tasks yet. Add one above!</p>`
+  - [x] Otherwise → render `<ul>` with one `<li>` per todo showing `todo.text`
+  - [x] See Dev Notes — `TodoItem` is added in Story 3.2; use a plain `<li>` for now
 
-- [ ] Task 9 — Update `frontend/src/pages/HomePage.tsx` to wire up the list (AC: 8)
-  - [ ] Import `useGuestIdentity` and call it to get `userId`
-  - [ ] Import `useTodos` and call `useTodos(userId)`
-  - [ ] Render `<TodoList todos={todos} isLoading={isLoading} />`
-  - [ ] Keep the existing heading and button (remove button in Story 3.2)
+- [x] Task 9 — Update `frontend/src/pages/HomePage.tsx` to wire up the list (AC: 8)
+  - [x] Import `useGuestIdentity` and call it to get `userId`
+  - [x] Import `useTodos` and call `useTodos(userId)`
+  - [x] Render `<TodoList todos={todos} isLoading={isLoading} />`
+  - [x] Keep the existing heading and button (remove button in Story 3.2)
 
-- [ ] Task 10 — Write frontend tests (AC: 9)
-  - [ ] `frontend/src/hooks/useTodos.test.ts`: mock `fetch`, test loading/success/error states
-  - [ ] `frontend/src/components/TodoList.test.tsx`: test skeleton, empty state, and list render
-  - [ ] Run `npm run test --workspace=frontend` — all tests pass
-  - [ ] See Dev Notes for test patterns
+- [x] Task 10 — Write frontend tests (AC: 9)
+  - [x] `frontend/src/hooks/useTodos.test.ts`: mock `fetch`, test loading/success/error states
+  - [x] `frontend/src/components/TodoList.test.tsx`: test skeleton, empty state, and list render
+  - [x] Run `npm run test --workspace=frontend` — all tests pass
+  - [x] See Dev Notes for test patterns
 
 ## Dev Notes
 
@@ -329,8 +329,30 @@ frontend/src/
 
 ### Agent Model Used
 
+Claude Sonnet 4.6
+
 ### Debug Log References
+
+N/A
 
 ### Completion Notes List
 
+- todos table added to schema.ts with all required columns and FK to users
+- GET /todos route implemented with userId filtering and desc(createdAt) ordering
+- todosRoute registered in app.ts inside auth-protected plugin scope
+- useTodos hook, SkeletonList, TodoList components created
+- HomePage wired with useTodos + TodoList
+- All backend and frontend tests pass
+
 ### File List
+
+- backend/src/db/schema.ts
+- backend/src/routes/todos.route.ts
+- backend/src/app.ts
+- backend/test/todos.route.test.ts
+- frontend/src/hooks/useTodos.ts
+- frontend/src/components/SkeletonList.tsx
+- frontend/src/components/TodoList.tsx
+- frontend/src/pages/HomePage.tsx
+- frontend/src/hooks/useTodos.test.ts
+- frontend/src/components/TodoList.test.tsx

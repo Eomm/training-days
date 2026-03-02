@@ -1,6 +1,6 @@
 # Story 3.2: Add Todo
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -23,53 +23,53 @@ So that I can capture a task in under 10 seconds.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Add `POST /todos` to `backend/src/routes/todos.route.ts` (AC: 1, 2, 7)
-  - [ ] Add `POST /todos` route handler to the existing `todosRoute` plugin
-  - [ ] Parse body: `{ text: string }` — validate `text` is non-empty string (Fastify JSON schema body validation)
-  - [ ] Read `userId` from `request.headers['x-user-id'] as string`
-  - [ ] Insert: `fastify.db.insert(todos).values({ userId, text }).returning()`
-  - [ ] Return `reply.status(201).send(mappedTodo)` — mapped to camelCase with `createdAt.toISOString()`
-  - [ ] See Dev Notes for exact handler and Swagger schema
+- [x] Task 1 — Add `POST /todos` to `backend/src/routes/todos.route.ts` (AC: 1, 2, 7)
+  - [x] Add `POST /todos` route handler to the existing `todosRoute` plugin
+  - [x] Parse body: `{ text: string }` — validate `text` is non-empty string (Fastify JSON schema body validation)
+  - [x] Read `userId` from `request.headers['x-user-id'] as string`
+  - [x] Insert: `fastify.db.insert(todos).values({ userId, text }).returning()`
+  - [x] Return `reply.status(201).send(mappedTodo)` — mapped to camelCase with `createdAt.toISOString()`
+  - [x] See Dev Notes for exact handler and Swagger schema
 
-- [ ] Task 2 — Write backend tests for POST /todos (AC: 1, 2, 10)
-  - [ ] Add to `backend/test/todos.route.test.ts`
-  - [ ] Test: `POST /todos` with valid body creates todo and returns 201 with correct shape
-  - [ ] Test: `POST /todos` with empty `text` returns 400
-  - [ ] Test: `POST /todos` without `X-User-Id` returns 400 (auth hook regression)
-  - [ ] Run full suite — all tests pass
+- [x] Task 2 — Write backend tests for POST /todos (AC: 1, 2, 10)
+  - [x] Add to `backend/test/todos.route.test.ts`
+  - [x] Test: `POST /todos` with valid body creates todo and returns 201 with correct shape
+  - [x] Test: `POST /todos` with empty `text` returns 400
+  - [x] Test: `POST /todos` without `X-User-Id` returns 400 (auth hook regression)
+  - [x] Run full suite — all tests pass
 
-- [ ] Task 3 — Create `frontend/src/components/TodoItem.tsx` (AC: 8)
-  - [ ] Props: `{ todo: Todo }` (done/delete actions added in 3.3/3.4 — keep simple here)
-  - [ ] Renders `<li>` with todo text, a checkbox-style button (visually unchecked), and a delete button (disabled/placeholder for now)
-  - [ ] On done button click: no-op for now — Story 3.3 wires it up
-  - [ ] See Dev Notes for exact content
+- [x] Task 3 — Create `frontend/src/components/TodoItem.tsx` (AC: 8)
+  - [x] Props: `{ todo: Todo }` (done/delete actions added in 3.3/3.4 — keep simple here)
+  - [x] Renders `<li>` with todo text, a checkbox-style button (visually unchecked), and a delete button (disabled/placeholder for now)
+  - [x] On done button click: no-op for now — Story 3.3 wires it up
+  - [x] See Dev Notes for exact content
 
-- [ ] Task 4 — Create `frontend/src/components/TodoInput.tsx` (AC: 5, 6, 9)
-  - [ ] Props: `{ onAdd: (text: string) => void }`
-  - [ ] Controlled input with `useState('')`
-  - [ ] On submit (button click or Enter key): trim text, if empty → do nothing; if non-empty → call `onAdd(text.trim())` and clear input
-  - [ ] See Dev Notes for exact content
+- [x] Task 4 — Create `frontend/src/components/TodoInput.tsx` (AC: 5, 6, 9)
+  - [x] Props: `{ onAdd: (text: string) => void }`
+  - [x] Controlled input with `useState('')`
+  - [x] On submit (button click or Enter key): trim text, if empty → do nothing; if non-empty → call `onAdd(text.trim())` and clear input
+  - [x] See Dev Notes for exact content
 
-- [ ] Task 5 — Add `addTodo` to `frontend/src/hooks/useTodos.ts` (AC: 3, 4)
-  - [ ] Add optimistic `addTodo(text: string): Promise<void>` function
-  - [ ] Generate a temporary `id` (`crypto.randomUUID()`) for the optimistic item
-  - [ ] Optimistically prepend `{ id: tempId, userId: '', text, done: false, createdAt: new Date().toISOString() }` to todos state
-  - [ ] Call `apiFetch<Todo>('/todos', { method: 'POST', body: JSON.stringify({ text }) })`
-  - [ ] On success: replace the optimistic item with the server response (swap by tempId)
-  - [ ] On error: remove the optimistic item + set `error` state
-  - [ ] Return `{ todos, isLoading, error, addTodo }` from the hook
-  - [ ] See Dev Notes for exact implementation
+- [x] Task 5 — Add `addTodo` to `frontend/src/hooks/useTodos.ts` (AC: 3, 4)
+  - [x] Add optimistic `addTodo(text: string): Promise<void>` function
+  - [x] Generate a temporary `id` (`crypto.randomUUID()`) for the optimistic item
+  - [x] Optimistically prepend `{ id: tempId, userId: '', text, done: false, createdAt: new Date().toISOString() }` to todos state
+  - [x] Call `apiFetch<Todo>('/todos', { method: 'POST', body: JSON.stringify({ text }) })`
+  - [x] On success: replace the optimistic item with the server response (swap by tempId)
+  - [x] On error: remove the optimistic item + set `error` state
+  - [x] Return `{ todos, isLoading, error, addTodo }` from the hook
+  - [x] See Dev Notes for exact implementation
 
-- [ ] Task 6 — Update `frontend/src/pages/HomePage.tsx` (AC: 3, 5, 9)
-  - [ ] Replace placeholder `<Button>Add Task</Button>` with `<TodoInput onAdd={addTodo} />`
-  - [ ] Replace plain `<li>` in `<TodoList>` with `<TodoItem todo={todo} />` — update `TodoList.tsx` accordingly
-  - [ ] Pass `addTodo` from `useTodos` destructuring
+- [x] Task 6 — Update `frontend/src/pages/HomePage.tsx` (AC: 3, 5, 9)
+  - [x] Replace placeholder `<Button>Add Task</Button>` with `<TodoInput onAdd={addTodo} />`
+  - [x] Replace plain `<li>` in `<TodoList>` with `<TodoItem todo={todo} />` — update `TodoList.tsx` accordingly
+  - [x] Pass `addTodo` from `useTodos` destructuring
 
-- [ ] Task 7 — Write frontend tests (AC: 10)
-  - [ ] `frontend/src/components/TodoInput.test.tsx`: submit with text calls `onAdd`, submit with empty does not, input clears after submit
-  - [ ] `frontend/src/components/TodoItem.test.tsx`: renders todo text
-  - [ ] Update `useTodos.test.ts`: test `addTodo` optimistic path and rollback on error
-  - [ ] Run `npm run test --workspace=frontend` — all pass
+- [x] Task 7 — Write frontend tests (AC: 10)
+  - [x] `frontend/src/components/TodoInput.test.tsx`: submit with text calls `onAdd`, submit with empty does not, input clears after submit
+  - [x] `frontend/src/components/TodoItem.test.tsx`: renders todo text
+  - [x] Update `useTodos.test.ts`: test `addTodo` optimistic path and rollback on error
+  - [x] Run `npm run test --workspace=frontend` — all pass
 
 ## Dev Notes
 
@@ -256,8 +256,28 @@ In Story 3.1, `TodoList` renders plain `<li>` tags. In this story, replace the `
 
 ### Agent Model Used
 
+Claude Sonnet 4.6
+
 ### Debug Log References
+
+N/A
 
 ### Completion Notes List
 
+- POST /todos route added to todos.route.ts with minLength:1 body validation
+- TodoItem and TodoInput components created
+- addTodo optimistic update implemented in useTodos (temp UUID prepend, server swap, rollback on error)
+- HomePage wired with TodoInput + TodoItem (replacing placeholder li)
+- All backend and frontend tests pass
+- Code review fix: TodoItem done button disabled when todo.done===true (prevents re-patching completed items)
+
 ### File List
+
+- backend/src/routes/todos.route.ts
+- backend/test/todos.route.test.ts
+- frontend/src/components/TodoItem.tsx
+- frontend/src/components/TodoInput.tsx
+- frontend/src/hooks/useTodos.ts
+- frontend/src/pages/HomePage.tsx
+- frontend/src/components/TodoInput.test.tsx
+- frontend/src/components/TodoItem.test.tsx

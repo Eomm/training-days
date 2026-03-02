@@ -87,7 +87,7 @@ describe('useTodos — addTodo', () => {
 })
 
 describe('useTodos — markDone', () => {
-  it('optimistically marks done and sets quote on success', async () => {
+  it('optimistically marks done and sets quote and lastDoneId on success', async () => {
     const todo = makeTodo({ id: 'todo-1', done: false })
     const updatedTodo = { ...todo, done: true }
     vi.stubGlobal('fetch', vi.fn()
@@ -104,6 +104,7 @@ describe('useTodos — markDone', () => {
 
     expect(result.current.todos[0].done).toBe(true)
     expect(result.current.quote).toBe('Great job!')
+    expect(result.current.lastDoneId).toBe('todo-1')
   })
 
   it('rolls back done state on error', async () => {
@@ -122,6 +123,31 @@ describe('useTodos — markDone', () => {
 
     expect(result.current.todos[0].done).toBe(false)
     expect(result.current.error).toMatch(/HTTP 403/)
+  })
+
+  it('removeDoneTodo removes the last-done item from the list', async () => {
+    const todo = makeTodo({ id: 'todo-1', done: false })
+    const updatedTodo = { ...todo, done: true }
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve([todo]) })
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve({ todo: updatedTodo, quote: 'Nice!' }) }),
+    )
+
+    const { result } = renderHook(() => useTodos('user-1'))
+    await waitFor(() => expect(result.current.todos).toHaveLength(1))
+
+    await act(async () => {
+      await result.current.markDone('todo-1')
+    })
+
+    expect(result.current.lastDoneId).toBe('todo-1')
+
+    act(() => {
+      result.current.removeDoneTodo()
+    })
+
+    expect(result.current.todos).toHaveLength(0)
+    expect(result.current.lastDoneId).toBeNull()
   })
 })
 

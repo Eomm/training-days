@@ -156,10 +156,12 @@ export const todosRoute: FastifyPluginAsync = async (fastify) => {
       .limit(1)
 
     if (!existing) {
-      return reply.status(404 as any).send({ statusCode: 404, error: 'Not Found', message: 'Todo not found' })
+      reply.statusCode = 404
+      return reply.send({ statusCode: 404, error: 'Not Found', message: 'Todo not found' })
     }
     if (existing.userId !== userId) {
-      return reply.status(403 as any).send({ statusCode: 403, error: 'Forbidden', message: 'Not your todo' })
+      reply.statusCode = 403
+      return reply.send({ statusCode: 403, error: 'Forbidden', message: 'Not your todo' })
     }
 
     const [updated] = await fastify.db
@@ -213,10 +215,12 @@ export const todosRoute: FastifyPluginAsync = async (fastify) => {
       .limit(1)
 
     if (!existing) {
-      return reply.status(404 as any).send({ statusCode: 404, error: 'Not Found', message: 'Todo not found' })
+      reply.statusCode = 404
+      return reply.send({ statusCode: 404, error: 'Not Found', message: 'Todo not found' })
     }
     if (existing.userId !== userId) {
-      return reply.status(403 as any).send({ statusCode: 403, error: 'Forbidden', message: 'Not your todo' })
+      reply.statusCode = 403
+      return reply.send({ statusCode: 403, error: 'Forbidden', message: 'Not your todo' })
     }
 
     await fastify.db.delete(todos).where(eq(todos.id, id))

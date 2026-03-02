@@ -2,6 +2,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -24,6 +25,9 @@ export function QuoteModal({ quote, onClose }: QuoteModalProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Task Complete! 🎉</DialogTitle>
+          <DialogDescription className="sr-only">
+            Motivational quote
+          </DialogDescription>
         </DialogHeader>
         <p className="text-lg italic text-center py-4">"{quote}"</p>
         <DialogFooter>

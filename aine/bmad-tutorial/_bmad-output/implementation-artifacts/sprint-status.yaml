@@ -57,18 +57,18 @@ development_status:
   epic-2-retrospective: optional
 
   # Epic 3: Core Task Operations
-  epic-3: in-progress
-  3-1-todo-data-schema-list-endpoint: review
-  3-2-add-todo: review
-  3-3-mark-todo-as-done-motivational-quote: review
-  3-4-delete-todo: review
+  epic-3: done
+  3-1-todo-data-schema-list-endpoint: done
+  3-2-add-todo: done
+  3-3-mark-todo-as-done-motivational-quote: done
+  3-4-delete-todo: done
   epic-3-retrospective: optional
 
   # Epic 4: Visual Task Aging & Passive Prioritization
-  epic-4: backlog
-  4-1-visual-age-highlighting-algorithm: backlog
-  4-2-staleness-threshold-contextual-prompt: backlog
-  4-3-empty-state: backlog
+  epic-4: done
+  4-1-visual-age-highlighting-algorithm: done
+  4-2-staleness-threshold-contextual-prompt: done
+  4-3-empty-state: done
   epic-4-retrospective: optional
 
   # Epic 5: Accessible & Responsive Experience

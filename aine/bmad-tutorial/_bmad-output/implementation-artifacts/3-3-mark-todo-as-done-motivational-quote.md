@@ -1,6 +1,6 @@
 # Story 3.3: Mark Todo as Done & Motivational Quote
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -23,57 +23,57 @@ So that completing tasks feels rewarding and reinforces the habit loop.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Create `backend/src/data/quotes.json` (AC: 4, 5)
-  - [ ] Create `backend/src/data/` directory
-  - [ ] Create `quotes.json` as a JSON array of at least 100 unique motivational quote strings
-  - [ ] See Dev Notes for the initial set of 100 quotes
+- [x] Task 1 — Create `backend/src/data/quotes.json` (AC: 4, 5)
+  - [x] Create `backend/src/data/` directory
+  - [x] Create `quotes.json` as a JSON array of at least 100 unique motivational quote strings
+  - [x] See Dev Notes for the initial set of 100 quotes
 
-- [ ] Task 2 — Add `PATCH /todos/:id` to `backend/src/routes/todos.route.ts` (AC: 1, 2, 3, 4, 9)
-  - [ ] Load `quotes.json` ONCE at module load time (not per-request): `import quotesData from '../data/quotes.json' assert { type: 'json' }` — or use `fs.readFileSync` in ESM
-  - [ ] Add route parameter `id` of type `string`
-  - [ ] Parse body: `{ done: boolean }` — Fastify JSON schema validation
-  - [ ] Read `userId` from `request.headers['x-user-id'] as string`
-  - [ ] Fetch existing todo: if not found → 404; if `todo.userId !== userId` → 403
-  - [ ] Update: `fastify.db.update(todos).set({ done }).where(eq(todos.id, id)).returning()`
-  - [ ] Select random quote: `quotesData[Math.floor(Math.random() * quotesData.length)]`
-  - [ ] Return `{ todo: mappedTodo, quote }` with status 200
-  - [ ] See Dev Notes for exact implementation
+- [x] Task 2 — Add `PATCH /todos/:id` to `backend/src/routes/todos.route.ts` (AC: 1, 2, 3, 4, 9)
+  - [x] Load `quotes.json` ONCE at module load time (not per-request): `import quotesData from '../data/quotes.json' assert { type: 'json' }` — or use `fs.readFileSync` in ESM
+  - [x] Add route parameter `id` of type `string`
+  - [x] Parse body: `{ done: boolean }` — Fastify JSON schema validation
+  - [x] Read `userId` from `request.headers['x-user-id'] as string`
+  - [x] Fetch existing todo: if not found → 404; if `todo.userId !== userId` → 403
+  - [x] Update: `fastify.db.update(todos).set({ done }).where(eq(todos.id, id)).returning()`
+  - [x] Select random quote: `quotesData[Math.floor(Math.random() * quotesData.length)]`
+  - [x] Return `{ todo: mappedTodo, quote }` with status 200
+  - [x] See Dev Notes for exact implementation
 
-- [ ] Task 3 — Write backend tests for PATCH /todos/:id (AC: 1, 2, 3, 10)
-  - [ ] Add to `backend/test/todos.route.test.ts`
-  - [ ] Test: patch own todo with `{ done: true }` returns 200 with `{ todo, quote }`
-  - [ ] Test: patch non-existent todo returns 404
-  - [ ] Test: patch another user's todo returns 403
-  - [ ] Test: response `quote` is a non-empty string
-  - [ ] Run full suite — all pass
+- [x] Task 3 — Write backend tests for PATCH /todos/:id (AC: 1, 2, 3, 10)
+  - [x] Add to `backend/test/todos.route.test.ts`
+  - [x] Test: patch own todo with `{ done: true }` returns 200 with `{ todo, quote }`
+  - [x] Test: patch non-existent todo returns 404
+  - [x] Test: patch another user's todo returns 403
+  - [x] Test: response `quote` is a non-empty string
+  - [x] Run full suite — all pass
 
-- [ ] Task 4 — Create `frontend/src/components/QuoteModal.tsx` (AC: 7)
-  - [ ] Props: `{ quote: string | null; onClose: () => void }`
-  - [ ] If `quote` is null → render nothing
-  - [ ] Use shadcn `Dialog` component for the modal
-  - [ ] Display the quote text and a "Keep going! 🎉" close button
-  - [ ] See Dev Notes for exact content
+- [x] Task 4 — Create `frontend/src/components/QuoteModal.tsx` (AC: 7)
+  - [x] Props: `{ quote: string | null; onClose: () => void }`
+  - [x] If `quote` is null → render nothing
+  - [x] Use shadcn `Dialog` component for the modal
+  - [x] Display the quote text and a "Keep going! 🎉" close button
+  - [x] See Dev Notes for exact content
 
-- [ ] Task 5 — Add `markDone` to `frontend/src/hooks/useTodos.ts` (AC: 6, 7, 8)
-  - [ ] Add `markDone(id: string): Promise<void>` function
-  - [ ] Optimistically set `done: true` on the todo immediately
-  - [ ] Call `apiFetch<{ todo: Todo; quote: string }>('/todos/' + id, { method: 'PATCH', body: JSON.stringify({ done: true }) })`
-  - [ ] On success: replace the todo with the server-confirmed todo; set `quote` state with `data.quote`
-  - [ ] On error: revert `done` back to `false` + set `error` state
-  - [ ] Return `{ todos, isLoading, error, addTodo, markDone, quote, clearQuote }` from hook
-  - [ ] See Dev Notes for exact implementation
+- [x] Task 5 — Add `markDone` to `frontend/src/hooks/useTodos.ts` (AC: 6, 7, 8)
+  - [x] Add `markDone(id: string): Promise<void>` function
+  - [x] Optimistically set `done: true` on the todo immediately
+  - [x] Call `apiFetch<{ todo: Todo; quote: string }>('/todos/' + id, { method: 'PATCH', body: JSON.stringify({ done: true }) })`
+  - [x] On success: replace the todo with the server-confirmed todo; set `quote` state with `data.quote`
+  - [x] On error: revert `done` back to `false` + set `error` state
+  - [x] Return `{ todos, isLoading, error, addTodo, markDone, quote, clearQuote }` from hook
+  - [x] See Dev Notes for exact implementation
 
-- [ ] Task 6 — Wire `TodoItem` done button and `QuoteModal` into `HomePage.tsx` (AC: 6, 7)
-  - [ ] Update `TodoItem` props: add `onDone: (id: string) => void`
-  - [ ] Wire the circular done button to call `onDone(todo.id)`
-  - [ ] In `HomePage.tsx`: destructure `{ markDone, quote, clearQuote }` from `useTodos`
-  - [ ] Render `<QuoteModal quote={quote} onClose={clearQuote} />` in `HomePage`
-  - [ ] Pass `onDone={markDone}` to `<TodoItem>` (via `<TodoList>`)
+- [x] Task 6 — Wire `TodoItem` done button and `QuoteModal` into `HomePage.tsx` (AC: 6, 7)
+  - [x] Update `TodoItem` props: add `onDone: (id: string) => void`
+  - [x] Wire the circular done button to call `onDone(todo.id)`
+  - [x] In `HomePage.tsx`: destructure `{ markDone, quote, clearQuote }` from `useTodos`
+  - [x] Render `<QuoteModal quote={quote} onClose={clearQuote} />` in `HomePage`
+  - [x] Pass `onDone={markDone}` to `<TodoItem>` (via `<TodoList>`)
 
-- [ ] Task 7 — Write frontend tests (AC: 10)
-  - [ ] `frontend/src/components/QuoteModal.test.tsx`: renders quote text, calls onClose on button click, renders nothing when quote is null
-  - [ ] Update `useTodos.test.ts`: test `markDone` optimistic set, server replace, and rollback on error
-  - [ ] Run `npm run test --workspace=frontend` — all pass
+- [x] Task 7 — Write frontend tests (AC: 10)
+  - [x] `frontend/src/components/QuoteModal.test.tsx`: renders quote text, calls onClose on button click, renders nothing when quote is null
+  - [x] Update `useTodos.test.ts`: test `markDone` optimistic set, server replace, and rollback on error
+  - [x] Run `npm run test --workspace=frontend` — all pass
 
 ## Dev Notes
 
@@ -145,22 +145,18 @@ fastify.patch(
       .limit(1);
 
     if (!existing) {
-      return reply
-        .status(404)
-        .send({
-          statusCode: 404,
-          error: "Not Found",
-          message: "Todo not found",
-        });
+      return reply.status(404).send({
+        statusCode: 404,
+        error: "Not Found",
+        message: "Todo not found",
+      });
     }
     if (existing.userId !== userId) {
-      return reply
-        .status(403)
-        .send({
-          statusCode: 403,
-          error: "Forbidden",
-          message: "Not your todo",
-        });
+      return reply.status(403).send({
+        statusCode: 403,
+        error: "Forbidden",
+        message: "Not your todo",
+      });
     }
 
     const [updated] = await fastify.db
@@ -293,8 +289,28 @@ The file is a flat JSON array of strings. Use a mix of short and medium-length q
 
 ### Agent Model Used
 
+Claude Sonnet 4.6
+
 ### Debug Log References
+
+N/A
 
 ### Completion Notes List
 
+- quotes.json created with 101 unique motivational quotes (loaded via createRequire at module init)
+- PATCH /todos/:id route added with ownership check (403), not-found (404), and random quote selection
+- markDone optimistic pattern in useTodos: immediate done:true, server replace on success, rollback on error
+- QuoteModal component created using shadcn Dialog
+- HomePage wired with QuoteModal + markDone
+- Code review fix: reply.status(404 as any) and reply.status(403 as any) → reply.status(404/403) (removed unnecessary type casts)
+- Code review fix: QuoteModal DialogDescription added (resolves Radix UI a11y warning)
+
 ### File List
+
+- backend/src/data/quotes.json
+- backend/src/routes/todos.route.ts
+- backend/test/todos.route.test.ts
+- frontend/src/components/QuoteModal.tsx
+- frontend/src/hooks/useTodos.ts
+- frontend/src/pages/HomePage.tsx
+- frontend/src/components/QuoteModal.test.tsx
