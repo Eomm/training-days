@@ -1,6 +1,6 @@
 # Story 1.5: Docker Compose Full Stack
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -20,51 +20,51 @@ so that the app can be run and demonstrated without local Node/Postgres installs
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Create `backend/Dockerfile` (AC: 1, 2, 5)
-  - [ ] Multi-stage build: builder stage installs all deps + runs `tsc`; production stage installs only prod deps + copies `dist/`
-  - [ ] Builder: `node:22-alpine`, `WORKDIR /app`, copy `package*.json`, `npm ci`, copy `tsconfig.json` + `src/`, run `npm run build`
-  - [ ] Production: `node:22-alpine`, `WORKDIR /app`, copy `package*.json`, `npm ci --omit=dev`, copy `dist/` from builder
-  - [ ] `EXPOSE 3000` and `CMD ["node", "dist/server.js"]`
-  - [ ] See Dev Notes for exact file content
+- [x] Task 1 — Create `backend/Dockerfile` (AC: 1, 2, 5)
+  - [x] Multi-stage build: builder stage installs all deps + runs `tsc`; production stage installs only prod deps + copies `dist/`
+  - [x] Builder: `node:22-alpine`, `WORKDIR /app`, copy `package*.json`, `npm install`, copy `tsconfig.json` + `src/`, run `npm run build`
+  - [x] Production: `node:22-alpine`, `WORKDIR /app`, copy `package*.json`, `npm install --omit=dev`, copy `dist/` from builder
+  - [x] `EXPOSE 3000` and `CMD ["node", "dist/server.js"]`
+  - [x] See Dev Notes for exact file content
 
-- [ ] Task 2 — Create `frontend/nginx.conf` (AC: 3, 6)
-  - [ ] Single `server {}` block listening on port 80
-  - [ ] `root /usr/share/nginx/html`, `index index.html`
-  - [ ] `location / { try_files $uri $uri/ /index.html; }` — critical for SPA client-side routing (prevents 404 on page refresh)
-  - [ ] See Dev Notes for exact file content
+- [x] Task 2 — Create `frontend/nginx.conf` (AC: 3, 6)
+  - [x] Single `server {}` block listening on port 80
+  - [x] `root /usr/share/nginx/html`, `index index.html`
+  - [x] `location / { try_files $uri $uri/ /index.html; }` — critical for SPA client-side routing (prevents 404 on page refresh)
+  - [x] See Dev Notes for exact file content
 
-- [ ] Task 3 — Create `frontend/Dockerfile` (AC: 1, 3, 5)
-  - [ ] Multi-stage: builder stage (`node:22-alpine`) builds the Vite app; production stage (`nginx:alpine`) serves it
-  - [ ] Builder: `WORKDIR /app`, copy `package*.json`, `npm ci`, copy all sources, declare `ARG VITE_API_URL`, `ENV VITE_API_URL`, run `npm run build`
-  - [ ] Production: copy `dist/` → `/usr/share/nginx/html`, copy `nginx.conf` → `/etc/nginx/conf.d/default.conf`
-  - [ ] `EXPOSE 80` and `CMD ["nginx", "-g", "daemon off;"]`
-  - [ ] See Dev Notes for exact file content and the VITE_API_URL build-arg gotcha
+- [x] Task 3 — Create `frontend/Dockerfile` (AC: 1, 3, 5)
+  - [x] Multi-stage: builder stage (`node:22-alpine`) builds the Vite app; production stage (`nginx:alpine`) serves it
+  - [x] Builder: `WORKDIR /app`, copy `package*.json`, `npm install`, copy all sources, declare `ARG VITE_API_URL`, `ENV VITE_API_URL`, run `npm run build`
+  - [x] Production: copy `dist/` → `/usr/share/nginx/html`, copy `nginx.conf` → `/etc/nginx/conf.d/default.conf`
+  - [x] `EXPOSE 80` and `CMD ["nginx", "-g", "daemon off;"]`
+  - [x] See Dev Notes for exact file content and the VITE_API_URL build-arg gotcha
 
-- [ ] Task 4 — Create root `docker-compose.yml` (AC: 1, 2, 3, 4, 7)
-  - [ ] `postgres` service: `image: postgres:17`, `healthcheck` using `pg_isready`, named volume `postgres_data` for data persistence
-  - [ ] `backend` service: `build: ./backend`, `depends_on: postgres (service_healthy)`, own `healthcheck` using `wget -qO-`, env vars via `${VAR:-default}`
-  - [ ] `frontend` service: `build.context: ./frontend`, `build.args.VITE_API_URL`, `depends_on: backend (service_healthy)`, port `8080:80`
-  - [ ] All env vars with sane defaults using `${VAR:-default}` syntax
-  - [ ] See Dev Notes for exact file content
+- [x] Task 4 — Create root `docker-compose.yml` (AC: 1, 2, 3, 4, 7)
+  - [x] `postgres` service: `image: postgres:17`, `healthcheck` using `pg_isready`, named volume `postgres_data` for data persistence
+  - [x] `backend` service: `build.context: .`, `build.dockerfile: backend/Dockerfile`, `depends_on: postgres (service_healthy)`, own `healthcheck` using `wget -qO-` on `127.0.0.1` (not `localhost` — avoids IPv6 ambiguity in alpine), env vars via `${VAR:-default}`
+  - [x] `frontend` service: `build.context: .`, `build.dockerfile: frontend/Dockerfile`, `build.args.VITE_API_URL`, `depends_on: backend (service_healthy)`, port `8080:80`
+  - [x] All env vars with sane defaults using `${VAR:-default}` syntax
+  - [x] See Dev Notes for exact file content
 
-- [ ] Task 5 — Create root `.env.example` and `.env` (AC: 7)
-  - [ ] `.env.example` at project root documents all compose-level variables with example values
-  - [ ] `.env` (gitignored) for local dev — developer copies from `.env.example`
-  - [ ] Ensure root `.gitignore` includes `.env` (check if exists; add entry if needed)
-  - [ ] See Dev Notes for exact content
+- [x] Task 5 — Create root `.env.example` and `.env` (AC: 7)
+  - [x] `.env.example` at project root documents all compose-level variables with example values
+  - [x] `.env` (gitignored) for local dev — developer copies from `.env.example`
+  - [x] Root `.gitignore` already includes `.env` (verified)
+  - [x] See Dev Notes for exact content
 
-- [ ] Task 6 — Verify `backend/.env.example` has `CORS_ORIGIN` (AC: 2)
-  - [ ] `backend/.env.example` should already have `CORS_ORIGIN=http://localhost:5173` (local dev value, from Story 1.2)
-  - [ ] The **docker-compose** `.env` overrides this with `CORS_ORIGIN=http://localhost:8080` (the nginx-served frontend URL)
-  - [ ] This distinction is documented in Dev Notes — easy to get wrong
+- [x] Task 6 — Verify `backend/.env.example` has `CORS_ORIGIN` (AC: 2)
+  - [x] `backend/.env.example` has `CORS_ORIGIN=http://localhost:5173` (local dev value, from Story 1.2)
+  - [x] The **docker-compose** `.env` overrides this with `CORS_ORIGIN=http://localhost:8080` (the nginx-served frontend URL)
+  - [x] This distinction is documented in Dev Notes — easy to get wrong
 
-- [ ] Task 7 — Smoke-test the full stack (AC: 1, 2, 3)
-  - [ ] Run `docker compose build` — confirm all images build without errors
-  - [ ] Run `docker compose up -d` — confirm all 3 containers reach healthy/running state
-  - [ ] `curl http://localhost:3000/health` → `{"status":"ok"}`
-  - [ ] Open `http://localhost:8080` in browser — confirm React app loads
-  - [ ] Refresh at `http://localhost:8080` — confirm no 404 (nginx SPA fallback works)
-  - [ ] Run `docker compose down` to clean up
+- [x] Task 7 — Smoke-test the full stack (AC: 1, 2, 3)
+  - [x] Run `docker compose build` — all images built without errors
+  - [x] Run `docker compose up -d` — all 3 containers reached healthy/running state
+  - [x] `curl http://localhost:3000/health` → `{"status":"ok"}`
+  - [x] `curl http://localhost:8080` → React HTML served
+  - [x] `curl http://localhost:8080/some/deep/route` → HTTP 200 (nginx SPA fallback works)
+  - [x] Run `docker compose down` to clean up
 
 ## Dev Notes
 
@@ -359,6 +359,19 @@ Claude Sonnet 4.6
 
 ### Completion Notes List
 
-- Ultimate context engine analysis completed — comprehensive developer guide created
+- All 7 tasks complete; full stack smoke-tested
+- Both Dockerfiles use `context: .` (repo root) so `tsconfig.base.json` is accessible during build; `dockerfile:` path points to workspace subdirectory
+- `npm ci` replaced with `npm install` — monorepo uses a single root `package-lock.json`, no per-workspace lockfile
+- Backend healthcheck uses `http://127.0.0.1:3000/health` (not `localhost`) — `node:22-alpine`'s wget resolves `localhost` to IPv6 (`::1`) first; fastify binds to IPv4 only
+- `VITE_API_URL` passed as `build.args` (not `environment:`) — Vite bakes it at build time into the JS bundle
+- `CORS_ORIGIN=http://localhost:8080` in root `.env` (nginx port), vs `http://localhost:5173` in `backend/.env` (Vite dev server)
+- SPA fallback verified: `curl http://localhost:8080/some/deep/route` → HTTP 200
 
 ### File List
+
+- `backend/Dockerfile` — NEW: multi-stage Node/tsc build
+- `frontend/Dockerfile` — NEW: multi-stage Vite + nginx build
+- `frontend/nginx.conf` — NEW: SPA-aware nginx config
+- `docker-compose.yml` — NEW: orchestrates postgres, backend, frontend
+- `.env.example` — NEW: root compose env template
+- `.env` — NEW: local compose env (gitignored)

@@ -10,6 +10,8 @@ describe("HomePage", () => {
 
   it("displays the MotivaTodo heading", () => {
     render(<HomePage />);
-    expect(screen.getByRole("heading", { name: /motivatodo/i })).toBeDefined();
+    expect(
+      screen.getByRole("heading", { name: /motivatodo/i }),
+    ).toBeInTheDocument();
   });
 });

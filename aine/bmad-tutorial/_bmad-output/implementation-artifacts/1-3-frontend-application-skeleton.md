@@ -1,6 +1,6 @@
 # Story 1.3: Frontend Application Skeleton
 
-Status: review
+Status: done
 
 ## Story
 

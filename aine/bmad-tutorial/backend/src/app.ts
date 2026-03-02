@@ -6,7 +6,9 @@ import rateLimit from '@fastify/rate-limit'
 import swagger from '@fastify/swagger'
 import swaggerUi from '@fastify/swagger-ui'
 import fastifyEnv from '@fastify/env'
+import dbPlugin from './plugins/db.plugin.ts'
 import { healthRoute } from './routes/health.route.ts'
+import { guestRoute } from './routes/guest.route.ts'
 
 const envSchema = {
   type: 'object',
@@ -27,6 +29,9 @@ export async function build(opts: FastifyServerOptions = {}): Promise<FastifyIns
 
   // Env validation — register first so all subsequent plugins can read process.env safely
   await app.register(fastifyEnv, { schema: envSchema, dotenv: true })
+
+  // DB plugin — registers fastify.db; requires DATABASE_URL from @fastify/env above
+  await app.register(dbPlugin)
 
   // Global error handler — MUST match { statusCode, error, message } contract (all stories depend on this)
   app.setErrorHandler((error: FastifyError, _request, reply) => {
@@ -58,6 +63,7 @@ export async function build(opts: FastifyServerOptions = {}): Promise<FastifyIns
 
   // Routes
   await app.register(healthRoute)
+  await app.register(guestRoute)
 
   return app
 }

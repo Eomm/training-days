@@ -1,6 +1,6 @@
 # Story 1.4: Database Connection & Migration Tooling
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -21,58 +21,58 @@ so that subsequent epics can define and migrate their schemas.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Create `backend/drizzle.config.ts` (AC: 1, 2)
-  - [ ] Use `defineConfig` from `drizzle-kit`
-  - [ ] Set `dialect: 'postgresql'`
-  - [ ] Set `schema: './src/db/schema.ts'`
-  - [ ] Set `out: './src/db/migrations'`
-  - [ ] Read `DATABASE_URL` from `process.env.DATABASE_URL` for `dbCredentials.url`
-  - [ ] See Dev Notes for exact file content
+- [x] Task 1 — Create `backend/drizzle.config.ts` (AC: 1, 2)
+  - [x] Use `defineConfig` from `drizzle-kit`
+  - [x] Set `dialect: 'postgresql'`
+  - [x] Set `schema: './src/db/schema.ts'`
+  - [x] Set `out: './src/db/migrations'`
+  - [x] Read `DATABASE_URL` from `process.env.DATABASE_URL` for `dbCredentials.url`
+  - [x] See Dev Notes for exact file content
 
-- [ ] Task 2 — Create `backend/src/db/schema.ts` (AC: 4)
-  - [ ] File starts with only the Drizzle imports needed for future table definitions
-  - [ ] No table definitions yet — tables are added story-by-story in Epics 2 and 3
-  - [ ] Export comments document which epic/story will add each table
-  - [ ] See Dev Notes for exact file content
+- [x] Task 2 — Create `backend/src/db/schema.ts` (AC: 4)
+  - [x] File starts with only the Drizzle imports needed for future table definitions
+  - [x] No table definitions yet — tables are added story-by-story in Epics 2 and 3
+  - [x] Export comments document which epic/story will add each table
+  - [x] See Dev Notes for exact file content
 
-- [ ] Task 3 — Create `backend/src/db/index.ts` (AC: 3)
-  - [ ] Import `drizzle` from `drizzle-orm/postgres-js` and `postgres` from `postgres`
-  - [ ] Create `queryClient` using `process.env.DATABASE_URL!`
-  - [ ] Export `db` as `drizzle(queryClient)`
-  - [ ] Export `queryClient` so the Fastify plugin can close it on shutdown
-  - [ ] See Dev Notes for exact file content
+- [x] Task 3 — Create `backend/src/db/index.ts` (AC: 3)
+  - [x] Import `drizzle` from `drizzle-orm/postgres-js` and `postgres` from `postgres`
+  - [x] Export `createDb(url: string)` factory that creates and returns `{ db, queryClient }`
+  - [x] Factory pattern prevents top-level module execution before `@fastify/env` sets `DATABASE_URL`
+  - [x] `db.plugin.ts` calls `createDb(process.env.DATABASE_URL!)` inside the plugin body
+  - [x] See Dev Notes for actual file content
 
-- [ ] Task 4 — Create `backend/src/plugins/db.plugin.ts` (AC: 6)
-  - [ ] Use `fastify-plugin` (`fp`) to ensure the decorator is scoped globally (not per-plugin)
-  - [ ] Decorate `fastify` with `db` using `fastify.decorate('db', db)`
-  - [ ] Add a TypeScript module augmentation (`declare module 'fastify'`) for the `db` property
-  - [ ] Register `fastify.addHook('onClose', ...)` to close the postgres connection cleanly
-  - [ ] See Dev Notes for exact file content
+- [x] Task 4 — Create `backend/src/plugins/db.plugin.ts` (AC: 6)
+  - [x] Use `fastify-plugin` (`fp`) to ensure the decorator is scoped globally (not per-plugin)
+  - [x] Decorate `fastify` with `db` using `fastify.decorate('db', db)`
+  - [x] Add a TypeScript module augmentation (`declare module 'fastify'`) for the `db` property
+  - [x] Register `fastify.addHook('onClose', ...)` to close the postgres connection cleanly
+  - [x] See Dev Notes for exact file content
 
-- [ ] Task 5 — Register `db.plugin.ts` in `app.ts` (AC: 7)
-  - [ ] Import `dbPlugin` from `./plugins/db.plugin.js`
-  - [ ] Register AFTER `@fastify/env` (so `DATABASE_URL` is validated and available) but BEFORE route registrations
-  - [ ] Do NOT change any existing plugin registrations — only insert the new `await app.register(dbPlugin)` line
+- [x] Task 5 — Register `db.plugin.ts` in `app.ts` (AC: 7)
+  - [x] Import `dbPlugin` from `./plugins/db.plugin.ts`
+  - [x] Register AFTER `@fastify/env` (so `DATABASE_URL` is validated and available) but BEFORE route registrations
+  - [x] Do NOT change any existing plugin registrations — only insert the new `await app.register(dbPlugin)` line
 
-- [ ] Task 6 — Add DB scripts to `backend/package.json` (AC: 1)
-  - [ ] `"db:push": "drizzle-kit push"` — pushes schema directly to DB (dev workflow)
-  - [ ] `"db:generate": "drizzle-kit generate"` — generates SQL migration files
-  - [ ] `"db:migrate": "drizzle-kit migrate"` — applies migration files (production workflow)
-  - [ ] These scripts require `DATABASE_URL` to be set in the environment before running
+- [x] Task 6 — Add DB scripts to `backend/package.json` (AC: 1)
+  - [x] `"db:push": "drizzle-kit push"` — pushes schema directly to DB (dev workflow)
+  - [x] `"db:generate": "drizzle-kit generate"` — generates SQL migration files
+  - [x] `"db:migrate": "drizzle-kit migrate"` — applies migration files (production workflow)
+  - [x] These scripts require `DATABASE_URL` to be set in the environment before running
 
-- [ ] Task 7 — Verify `backend/.env.example` contains `DATABASE_URL` (AC: 5)
-  - [ ] `DATABASE_URL=postgres://motivatodo:motivatodo@localhost:5432/motivatodo` should already be present from Story 1.2
-  - [ ] If not, add it with the above example value
-  - [ ] Confirm `backend/.env` (gitignored, local dev) also has this value for local testing
+- [x] Task 7 — Verify `backend/.env.example` contains `DATABASE_URL` (AC: 5)
+  - [x] `DATABASE_URL=postgres://motivatodo:motivatodo@localhost:5432/motivatodo` should already be present from Story 1.2
+  - [x] If not, add it with the above example value
+  - [x] Confirm `backend/.env` (gitignored, local dev) also has this value for local testing
 
-- [ ] Task 8 — Write integration test for DB plugin (AC: 8)
-  - [ ] Create `backend/src/plugins/db.plugin.test.ts`
-  - [ ] Test 1: `build()` resolves without error when `DATABASE_URL` is set (even if DB is unreachable — plugin should register, the error appears at query time)
-  - [ ] Test 2: `fastify.db` is defined after `build()` completes
-  - [ ] Use `build({ logger: false })` + `app.inject()` (do NOT call `listen()`)
-  - [ ] Call `app.close()` in cleanup (`t.after(() => app.close())`)
-  - [ ] Pre-set `process.env.DATABASE_URL` in test if not already set via `.env`
-  - [ ] See Dev Notes for exact test content
+- [x] Task 8 — Write integration test for DB plugin (AC: 8)
+  - [x] Create `backend/test/db.plugin.test.ts`
+  - [x] Test 1: `build()` resolves without error when `DATABASE_URL` is set (even if DB is unreachable — plugin should register, the error appears at query time)
+  - [x] Test 2: `fastify.db` is defined after `build()` completes
+  - [x] Use `build({ logger: false })` + `app.inject()` (do NOT call `listen()`)
+  - [x] Call `app.close()` in cleanup (`t.after(() => app.close())`)
+  - [x] Pre-set `process.env.DATABASE_URL` in test if not already set via `.env`
+  - [x] See Dev Notes for exact test content
 
 ## Dev Notes
 
@@ -266,10 +266,12 @@ backend/
     │   ├── schema.ts          ← NEW: empty (tables added in Epics 2-3)
     │   └── migrations/        ← generated by drizzle-kit (gitignored or committed)
     ├── plugins/
-    │   ├── db.plugin.ts       ← NEW: fastify decorator for db
-    │   └── db.plugin.test.ts  ← NEW: decorator test
-    └── routes/
-        └── health.route.ts    (unchanged)
+    │   └── db.plugin.ts       ← NEW: fastify decorator for db
+    ├── routes/
+    │   └── health.route.ts    (unchanged)
+    └── test/
+        ├── health.test.ts         (unchanged)
+        └── db.plugin.test.ts      ← NEW: decorator test
 ```
 
 ### Naming Conventions Enforced
@@ -294,12 +296,29 @@ The backend `app.ts` factory pattern from Story 1.2 is the integration point. No
 
 ### Agent Model Used
 
-Claude Sonnet 4.6
+Claude Sonnet 4.6 (GitHub Copilot)
 
 ### Debug Log References
 
+- Import extensions: story Dev Notes used `.js` extensions but the existing backend codebase uses `.ts` extensions with `--experimental-strip-types`. Fixed all imports to `.ts` accordingly: `db.plugin.ts`, `db.plugin.test.ts`, `app.ts`.
+- Test file location: `db.plugin.test.ts` placed in `backend/test/` (not co-located) per backend convention (all test files in `test/`). Test script remains `test/**/*.test.ts`.
+
 ### Completion Notes List
 
-- Ultimate context engine analysis completed — comprehensive developer guide created
+- All 8 tasks complete; 4/4 tests pass (`node --test`)
+- `drizzle.config.ts` created at backend root
+- `schema.ts` starts empty with comments pointing to Story 2.1 (users) and 3.1 (todos)
+- `db/index.ts` exports `createDb(url)` factory (not a top-level instance) — avoids ES module hoisting bug where `postgres()` would execute before `@fastify/env` sets `DATABASE_URL` in tests
+- `db.plugin.ts` calls `createDb(process.env.DATABASE_URL!)` inside the plugin body; uses `fastify-plugin` for global decorator scope; `onClose` cleans up connection
+- `app.ts` registers `dbPlugin` after `fastifyEnv`, before security plugins
+- `db:push`, `db:generate`, `db:migrate` scripts added to `package.json`
 
 ### File List
+
+- `backend/drizzle.config.ts` — NEW: drizzle-kit config
+- `backend/src/db/schema.ts` — NEW: empty schema stub
+- `backend/src/db/index.ts` — NEW: postgres + drizzle instance
+- `backend/src/plugins/db.plugin.ts` — NEW: Fastify db decorator
+- `backend/test/db.plugin.test.ts` — NEW: decorator test (moved to test/ per convention)
+- `backend/src/app.ts` — UPDATED: +dbPlugin registration
+- `backend/package.json` — UPDATED: test glob + db: scripts
