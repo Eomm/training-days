@@ -1,0 +1,48 @@
+name: story-pipeline
+description: >
+  Creates a story file and then immediately develops it.
+  Runs create-story and dev-story serially with automatic handoff.
+
+sequence:
+  # Step 1: Scrum Master creates the story
+  - step: create-story
+    agent: sm
+    action: create-story
+    description: >
+      Draft a new story file from the next item in the backlog.
+    outputs:
+      - story-file
+
+  # Step 2: Scrum Master marks the story as ready for dev
+  - step: story-ready
+    agent: sm
+    action: story-ready
+    description: >
+      Review and approve the drafted story, confirming acceptance
+      criteria, technical notes, and scope are complete.
+    dependencies:
+      - story-file
+    outputs:
+      - approved-story
+
+  # Step 3: Developer implements the approved story
+  - step: dev-story
+    agent: dev
+    action: dev-story
+    description: >
+      Implement the approved story following the architecture,
+      project context, and story acceptance criteria.
+    dependencies:
+      - approved-story
+    outputs:
+      - implemented-story
+
+  # Step 4: Developer marks story as complete
+  - step: story-done
+    agent: dev
+    action: story-approved
+    description: >
+      Mark the story as done after all acceptance criteria are met
+      and code is ready for review.
+    dependencies:
+      - implemented-story

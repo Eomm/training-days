@@ -1,0 +1,62 @@
+// backend/test/guest.route.test.ts
+import { test, before } from 'node:test'
+import assert from 'node:assert/strict'
+import { build } from '../src/app.ts'
+
+before(() => {
+  process.env.DATABASE_URL = process.env.DATABASE_URL ?? 'postgres://motivatodo:motivatodo@localhost:5432/motivatodo'
+  process.env.PORT = process.env.PORT ?? '3000'
+  process.env.CORS_ORIGIN = process.env.CORS_ORIGIN ?? 'http://localhost:5173'
+})
+
+test('POST /guest returns 201 with a valid UUID userId', async (t) => {
+  const app = await build({ logger: false })
+  t.after(() => app.close())
+
+  const res = await app.inject({ method: 'POST', url: '/guest', headers: { 'content-type': 'application/json' }, payload: '{}' })
+  assert.equal(res.statusCode, 201)
+  const body = res.json<{ userId: string }>()
+  assert.ok(typeof body.userId === 'string')
+  assert.match(body.userId, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i)
+})
+
+test('POST /guest called twice returns two different userIds', async (t) => {
+  const app = await build({ logger: false })
+  t.after(() => app.close())
+
+  const opts = { method: 'POST' as const, url: '/guest', headers: { 'content-type': 'application/json' }, payload: '{}' }
+  const res1 = await app.inject(opts)
+  const res2 = await app.inject(opts)
+  assert.equal(res1.statusCode, 201)
+  assert.equal(res2.statusCode, 201)
+  const id1 = res1.json<{ userId: string }>().userId
+  const id2 = res2.json<{ userId: string }>().userId
+  assert.notEqual(id1, id2)
+})
+
+test('POST /guest response body contains only userId', async (t) => {
+  const app = await build({ logger: false })
+  t.after(() => app.close())
+
+  const res = await app.inject({ method: 'POST', url: '/guest', headers: { 'content-type': 'application/json' }, payload: '{}' })
+  const body = res.json<Record<string, unknown>>()
+  assert.deepEqual(Object.keys(body).sort(), ['userId'])
+})
+
+test('POST /guest with extra properties in body strips them and returns 201', async (t) => {
+  const app = await build({ logger: false })
+  t.after(() => app.close())
+
+  const res = await app.inject({
+    method: 'POST',
+    url: '/guest',
+    headers: { 'content-type': 'application/json' },
+    payload: JSON.stringify({ sneaky: 'field' }),
+  })
+  // Fastify's default Ajv has removeAdditional: true — extra properties
+  // are silently stripped rather than rejected. POST /guest doesn't use
+  // body data anyway (UUID is generated server-side), so 201 is correct.
+  assert.equal(res.statusCode, 201)
+  const body = res.json<Record<string, unknown>>()
+  assert.deepEqual(Object.keys(body).sort(), ['userId'])
+})

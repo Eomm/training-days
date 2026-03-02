@@ -1,0 +1,60 @@
+# docker-compose.yml — MotivaTodo full stack
+# Run: docker compose up -d
+# Stop: docker compose down
+# Rebuild: docker compose build
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-motivatodo}
+      POSTGRES_USER: ${POSTGRES_USER:-motivatodo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-motivatodo}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-motivatodo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      # postgres service name is used as hostname inside the Docker network
+      DATABASE_URL: ${DATABASE_URL:-postgres://motivatodo:motivatodo@postgres:5432/motivatodo}
+      PORT: ${PORT:-3000}
+      # CORS_ORIGIN must match the browser-facing URL of the frontend (http://localhost:8080 in Docker)
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        # VITE_API_URL is a build-time argument — baked into the JS bundle by Vite
+        # Value must be the PUBLIC host URL of the backend (localhost:3000 — browser-accessible)
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

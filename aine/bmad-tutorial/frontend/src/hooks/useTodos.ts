@@ -1,0 +1,127 @@
+// frontend/src/hooks/useTodos.ts
+import { useState, useEffect, useCallback } from 'react'
+import { apiFetch } from '../lib/api.ts'
+import type { Todo } from '../types.ts'
+
+export function useTodos(userId: string | null): {
+  todos: Todo[]
+  isLoading: boolean
+  error: string | null
+  clearError: () => void
+  retryFetch: () => void
+  addTodo: (text: string) => Promise<void>
+  markDone: (id: string) => Promise<void>
+  deleteTodo: (id: string) => Promise<void>
+  quote: string | null
+  clearQuote: () => void
+  lastDoneId: string | null
+  pendingQuote: string | null
+  showPendingQuote: () => void
+  removeDoneTodo: () => void
+} {
+  const [todos, setTodos] = useState<Todo[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+  const [quote, setQuote] = useState<string | null>(null)
+  const [pendingQuote, setPendingQuote] = useState<string | null>(null)
+  const [lastDoneId, setLastDoneId] = useState<string | null>(null)
+  const [fetchKey, setFetchKey] = useState(0)
+
+  const retryFetch = useCallback(() => setFetchKey((k) => k + 1), [])
+  const clearError = useCallback(() => setError(null), [])
+
+  useEffect(() => {
+    if (userId === null) return
+
+    let cancelled = false
+    setIsLoading(true)
+    setError(null)
+
+    apiFetch<Todo[]>('/todos')
+      .then((data) => {
+        if (!cancelled) setTodos(data)
+      })
+      .catch((err: Error) => {
+        if (!cancelled) setError(err.message)
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false)
+      })
+
+    return () => { cancelled = true }
+  }, [userId, fetchKey])
+
+  async function addTodo(text: string): Promise<void> {
+    const tempId = crypto.randomUUID()
+    const optimisticTodo: Todo = {
+      id: tempId,
+      userId: '',
+      text,
+      done: false,
+      createdAt: new Date().toISOString(),
+    }
+
+    setTodos((prev) => [optimisticTodo, ...prev])
+
+    try {
+      const created = await apiFetch<Todo>('/todos', {
+        method: 'POST',
+        body: JSON.stringify({ text }),
+      })
+      setTodos((prev) => prev.map((t) => (t.id === tempId ? created : t)))
+    } catch (err) {
+      setTodos((prev) => prev.filter((t) => t.id !== tempId))
+      setError(err instanceof Error ? err.message : 'Failed to add todo')
+    }
+  }
+
+  async function markDone(id: string): Promise<void> {
+    const previous = todos.find((t) => t.id === id)
+    if (!previous) return
+
+    setTodos((prev) => prev.map((t) => (t.id === id ? { ...t, done: true } : t)))
+    setLastDoneId(id)
+
+    try {
+      const data = await apiFetch<{ todo: Todo; quote: string }>(
+        '/todos/' + id,
+        { method: 'PATCH', body: JSON.stringify({ done: true }) },
+      )
+      setTodos((prev) => prev.map((t) => (t.id === id ? data.todo : t)))
+      setPendingQuote(data.quote)
+    } catch (err) {
+      setTodos((prev) => prev.map((t) => (t.id === id ? previous : t)))
+      setLastDoneId(null)
+      setError(err instanceof Error ? err.message : 'Failed to update todo')
+    }
+  }
+
+  async function deleteTodo(id: string): Promise<void> {
+    const snapshot = todos
+
+    setTodos((prev) => prev.filter((t) => t.id !== id))
+
+    try {
+      await apiFetch<void>('/todos/' + id, { method: 'DELETE' })
+    } catch (err) {
+      setTodos(snapshot)
+      setError(err instanceof Error ? err.message : 'Failed to delete todo')
+    }
+  }
+
+  function showPendingQuote(): void {
+    if (pendingQuote) {
+      setQuote(pendingQuote)
+      setPendingQuote(null)
+    }
+  }
+
+  function removeDoneTodo(): void {
+    if (lastDoneId) {
+      setTodos((prev) => prev.filter((t) => t.id !== lastDoneId))
+      setLastDoneId(null)
+    }
+  }
+
+  return { todos, isLoading, error, clearError, retryFetch, addTodo, markDone, deleteTodo, quote, clearQuote: () => setQuote(null), lastDoneId, pendingQuote, showPendingQuote, removeDoneTodo }
+}

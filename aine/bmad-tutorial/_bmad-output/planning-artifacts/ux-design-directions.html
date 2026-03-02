@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MotivaTodo — Design Directions</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --white: #ffffff;
+      --zinc-50: #fafafa;
+      --zinc-100: #f4f4f5;
+      --zinc-200: #e4e4e7;
+      --zinc-300: #d4d4d8;
+      --zinc-400: #a1a1aa;
+      --zinc-500: #71717a;
+      --zinc-600: #52525b;
+      --zinc-700: #3f3f46;
+      --zinc-800: #27272a;
+      --zinc-900: #18181b;
+      --zinc-950: #09090b;
+    }
+
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--zinc-100);
+      color: var(--zinc-950);
+      min-height: 100vh;
+    }
+
+    /* ───── NAV ───── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--zinc-950);
+      color: white;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+    }
+
+    .nav-pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--zinc-700);
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      color: var(--zinc-400);
+      transition: all 0.15s;
+      background: transparent;
+    }
+
+    .nav-pill:hover,
+    .nav-pill.active {
+      background: white;
+      color: var(--zinc-950);
+      border-color: white;
+    }
+
+    /* ───── LAYOUT ───── */
+    .page {
+      padding-top: 72px;
+    }
+
+    .section {
+      display: none;
+      min-height: calc(100vh - 72px);
+      padding: 40px 24px;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    .section.visible {
+      display: flex;
+    }
+
+    .section.two-col {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .section.one-col {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ───── DEVICE SHELL ───── */
+    .device {
+      width: 390px;
+      min-height: 680px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18), 0 4px 16px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
+    }
+
+    /* ───── DESCRIPTION CARD ───── */
+    .desc-card {
+      width: 320px;
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      align-self: flex-start;
+      margin-top: 12px;
+    }
+
+    .desc-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .desc-card .tag {
+      display: inline-block;
+      margin: 0 0 16px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--zinc-500);
+      background: var(--zinc-100);
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .desc-card p {
+      font-size: 14px;
+      color: var(--zinc-600);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .desc-card ul {
+      padding-left: 16px;
+    }
+
+    .desc-card ul li {
+      font-size: 13px;
+      color: var(--zinc-700);
+      line-height: 1.7;
+    }
+
+    .desc-card .pros {
+      color: var(--zinc-700);
+      font-size: 13px;
+      font-weight: 600;
+      margin: 12px 0 4px;
+    }
+
+    /* ───────────────────────────────────────────── */
+    /*  DIRECTION 1 — MINIMAL LINE                  */
+    /* ───────────────────────────────────────────── */
+    .d1-shell {
+      background: white;
+      height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .d1-header {
+      height: 56px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--zinc-200);
+      font-size: 13px;
+      color: var(--zinc-500);
+    }
+
+    .d1-logo {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .d1-logo span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--zinc-950);
+    }
+
+    .d1-input-row {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--zinc-100);
+    }
+
+    .d1-input {
+      width: 100%;
+      height: 40px;
+      border: none;
+      outline: none;
+      font-size: 15px;
+      color: var(--zinc-400);
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .d1-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .d1-task {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      height: 48px;
+      gap: 12px;
+      border-bottom: 1px solid transparent;
+      transition: background 0.2s;
+    }
+
+    .d1-task:hover {
+      background: var(--zinc-50);
+    }
+
+    .d1-check {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--zinc-300);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .d1-text {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .d1-del {
+      color: var(--zinc-300);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .d1-del:hover {
+      color: var(--zinc-600);
+    }
+
+    /* aging */
+    .age-0 {
+      background: var(--white);
+    }
+
+    .age-1 {
+      background: var(--zinc-50);
+    }
+
+    .age-2 {
+      background: var(--zinc-100);
+    }
+
+    .age-3 {
+      background: var(--zinc-200);
+    }
+
+    .age-4 {
+      background: var(--zinc-300);
+    }
+
+    .age-peak {
+      background: var(--zinc-400);
+    }
+
+    .age-stale {
+      background: var(--zinc-200);
+      border-left: 3px dashed var(--zinc-400) !important;
+    }
+
+    .d1-section-toggle {
+      padding: 10px 20px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--zinc-400);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ───────────────────────────────────────────── */
+    /*  DIRECTION 2 — RULED LINES                   */
+    /* ───────────────────────────────────────────── */
+    .d2-shell {
+      background: var(--zinc-50);
+      height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .d2-header {
+      height: 56px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border-bottom: 2px solid var(--zinc-950);
+    }
+
+    .d2-logo {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .d2-logo span {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--zinc-950);
+      letter-spacing: -0.02em;
+    }
+
+    .d2-input-row {
+      padding: 14px 20px;
+      background: white;
+      border-bottom: 2px solid var(--zinc-950);
+    }
+
+    .d2-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 15px;
+      color: var(--zinc-400);
+      font-family: inherit;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--zinc-200);
+    }
+
+    .d2-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 0;
+    }
+
+    .d2-task {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      height: 52px;
+      gap: 14px;
+      border-bottom: 1px solid var(--zinc-200);
+    }
+
+    .d2-check {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--zinc-300);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .d2-text {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .d2-age-pill {
+      font-size: 10px;
+      color: var(--zinc-400);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .d2-del {
+      color: var(--zinc-300);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .d2-section {
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 2px solid var(--zinc-950);
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--zinc-700);
+    }
+
+    /* ───────────────────────────────────────────── */
+    /*  DIRECTION 3 — CARD STACK                    */
+    /* ───────────────────────────────────────────── */
+    .d3-shell {
+      background: var(--zinc-100);
+      height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .d3-header {
+      height: 56px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--zinc-100);
+    }
+
+    .d3-logo {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .d3-logo span {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .d3-input-row {
+      padding: 4px 16px 12px;
+    }
+
+    .d3-input-card {
+      background: white;
+      border-radius: 10px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--zinc-200);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .d3-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--zinc-400);
+    }
+
+    .d3-add-btn {
+      width: 28px;
+      height: 28px;
+      background: var(--zinc-950);
+      color: white;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .d3-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .d3-card {
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    .d3-check {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--zinc-300);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .d3-text {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .d3-del {
+      color: var(--zinc-300);
+      font-size: 14px;
+    }
+
+    .d3-section {
+      margin: 4px 16px 0;
+      padding: 10px 0;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--zinc-400);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ───────────────────────────────────────────── */
+    /*  DIRECTION 4 — INSET PANEL                   */
+    /* ───────────────────────────────────────────── */
+    .d4-shell {
+      background: var(--zinc-200);
+      height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .d4-header {
+      height: 56px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .d4-logo {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .d4-logo span {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .d4-panel {
+      flex: 1;
+      margin: 0 16px 20px;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .d4-input-row {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--zinc-100);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .d4-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--zinc-400);
+    }
+
+    .d4-add-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--zinc-950);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .d4-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .d4-task {
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      height: 50px;
+      gap: 12px;
+      border-bottom: 1px solid var(--zinc-100);
+    }
+
+    .d4-check {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--zinc-200);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .d4-text {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .d4-del {
+      color: var(--zinc-200);
+      font-size: 14px;
+    }
+
+    .d4-section {
+      padding: 10px 18px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--zinc-400);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ───────────────────────────────────────────── */
+    /*  DIRECTION 5 — TYPE-FORWARD                  */
+    /* ───────────────────────────────────────────── */
+    .d5-shell {
+      background: white;
+      height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .d5-header {
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .d5-logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--zinc-950);
+    }
+
+    .d5-input-row {
+      padding: 16px 24px 12px;
+    }
+
+    .d5-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 24px;
+      font-weight: 300;
+      color: var(--zinc-300);
+      color: var(--zinc-400);
+      border-bottom: 2px solid var(--zinc-200);
+      padding-bottom: 10px;
+    }
+
+    .d5-input:focus {
+      border-bottom-color: var(--zinc-950);
+      color: var(--zinc-950);
+    }
+
+    .d5-count {
+      padding: 8px 24px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--zinc-400);
+    }
+
+    .d5-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 24px;
+    }
+
+    .d5-task {
+      display: flex;
+      align-items: baseline;
+      padding: 12px 0;
+      gap: 14px;
+      border-bottom: 1px solid var(--zinc-100);
+    }
+
+    .d5-check {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--zinc-300);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .d5-text {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .d5-del {
+      color: var(--zinc-200);
+      font-size: 14px;
+    }
+
+    .d5-meta {
+      font-size: 12px;
+      color: var(--zinc-300);
+      align-self: flex-end;
+      margin-bottom: 2px;
+    }
+
+    .d5-section {
+      padding: 16px 24px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--zinc-300);
+      cursor: pointer;
+    }
+
+    /* ───────────────────────────────────────────── */
+    /*  DIRECTION 6 — INTENSITY BAR                 */
+    /* ───────────────────────────────────────────── */
+    .d6-shell {
+      background: white;
+      height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .d6-header {
+      height: 56px;
+      padding: 0 20px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--zinc-100);
+    }
+
+    .d6-logo {
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .d6-logo span {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .d6-input-row {
+      padding: 12px 24px 12px 6px;
+      border-bottom: 1px solid var(--zinc-100);
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .d6-bar-spacer {
+      width: 18px;
+      flex-shrink: 0;
+    }
+
+    .d6-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--zinc-400);
+      padding: 6px 12px;
+      border: 1.5px solid var(--zinc-200);
+      border-radius: 8px;
+      margin-right: 10px;
+    }
+
+    .d6-add-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--zinc-950);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .d6-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .d6-task {
+      display: flex;
+      align-items: stretch;
+      min-height: 52px;
+      border-bottom: 1px solid var(--zinc-100);
+    }
+
+    .d6-age-bar {
+      width: 4px;
+      flex-shrink: 0;
+      border-radius: 2px;
+      margin: 8px 0 8px 4px;
+    }
+
+    .d6-task-inner {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 0 16px 0 14px;
+      gap: 12px;
+    }
+
+    .d6-check {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--zinc-300);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .d6-text {
+      flex: 1;
+      font-size: 15px;
+    }
+
+    .d6-del {
+      color: var(--zinc-200);
+      font-size: 14px;
+    }
+
+    .d6-section {
+      padding: 10px 20px 10px 24px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--zinc-400);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ───── COMPARISON PANEL ───── */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1320px;
+    }
+
+    .comp-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .comp-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--zinc-500);
+      text-align: center;
+    }
+
+    .comp-device {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .comp-device:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+    }
+
+    .comp-device .d1-shell,
+    .comp-device .d2-shell,
+    .comp-device .d3-shell,
+    .comp-device .d4-shell,
+    .comp-device .d5-shell,
+    .comp-device .d6-shell {
+      transform: scale(0.66);
+      transform-origin: top left;
+      width: calc(390px / 0.66);
+      height: 680px;
+      pointer-events: none;
+    }
+
+    .comp-device {
+      width: 258px;
+      height: 449px;
+      overflow: hidden;
+    }
+
+    /* ───── PAGE HEADER ───── */
+    .page-hero {
+      max-width: 600px;
+      text-align: center;
+      margin: 0 auto 32px;
+    }
+
+    .page-hero h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .page-hero p {
+      font-size: 15px;
+      color: var(--zinc-500);
+      line-height: 1.6;
+    }
+
+    /* small helper */
+    .flex-center {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
+  <nav class="nav">
+    <span class="nav-title">MotivaTodo · Design Directions</span>
+    <div class="nav-pills">
+      <button class="nav-pill active" onclick="show('overview')">Overview</button>
+      <button class="nav-pill" onclick="show('d1')">1 · Minimal Line</button>
+      <button class="nav-pill" onclick="show('d2')">2 · Ruled Lines</button>
+      <button class="nav-pill" onclick="show('d3')">3 · Card Stack</button>
+      <button class="nav-pill" onclick="show('d4')">4 · Inset Panel</button>
+      <button class="nav-pill" onclick="show('d5')">5 · Type-Forward</button>
+      <button class="nav-pill" onclick="show('d6')">6 · Intensity Bar</button>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- ════════════ OVERVIEW ══════════════ -->
+    <section id="overview" class="section one-col visible">
+      <div class="page-hero">
+        <h2>6 Design Directions</h2>
+        <p>All directions share the same monochrome zinc palette, system fonts, and visual aging logic. What differs is
+          the <strong>structural metaphor</strong> — how space, weight, and chrome are used. Click any card to explore
+          full-screen.</p>
+      </div>
+      <div class="comparison-grid">
+
+        <!-- D1 mini -->
+        <div class="comp-item">
+          <div class="comp-label">1 · Minimal Line</div>
+          <div class="comp-device" onclick="show('d1')">
+            <div class="d1-shell" style="width:390px">
+              <div class="d1-header">
+                <div class="d1-logo">📭 <span>MotivaTodo</span></div>
+                <span>3 tasks</span>
+              </div>
+              <div class="d1-input-row"><input class="d1-input" placeholder="Add a task…" readonly></div>
+              <div class="d1-list">
+                <div class="d1-task age-0">
+                  <div class="d1-check"></div><span class="d1-text">Review contract before Monday</span><span
+                    class="d1-del">×</span>
+                </div>
+                <div class="d1-task age-2">
+                  <div class="d1-check"></div><span class="d1-text">Call opposing counsel</span><span
+                    class="d1-del">×</span>
+                </div>
+                <div class="d1-task age-peak">
+                  <div class="d1-check"></div><span class="d1-text">File discovery documents</span><span
+                    class="d1-del">×</span>
+                </div>
+                <div class="d1-task age-stale">
+                  <div class="d1-check"></div><span class="d1-text">Update billing sheet</span><span
+                    class="d1-del">×</span>
+                </div>
+              </div>
+              <div class="d1-section-toggle">▸ Completed (2)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D2 mini -->
+        <div class="comp-item">
+          <div class="comp-label">2 · Ruled Lines</div>
+          <div class="comp-device" onclick="show('d2')">
+            <div class="d2-shell" style="width:390px">
+              <div class="d2-header">
+                <div class="d2-logo">📭 <span>MotivaTodo</span></div>
+                <span style="font-size:12px;color:var(--zinc-500)">3 open</span>
+              </div>
+              <div class="d2-input-row"><input class="d2-input" placeholder="Add a task…" readonly></div>
+              <div class="d2-list">
+                <div class="d2-task age-0">
+                  <div class="d2-check"></div><span class="d2-text">Review contract before Monday</span><span
+                    class="d2-del">×</span>
+                </div>
+                <div class="d2-task age-2">
+                  <div class="d2-check"></div><span class="d2-text">Call opposing counsel</span><span
+                    class="d2-age-pill">3d</span><span class="d2-del">×</span>
+                </div>
+                <div class="d2-task age-peak">
+                  <div class="d2-check"></div><span class="d2-text">File discovery documents</span><span
+                    class="d2-age-pill">31d</span><span class="d2-del">×</span>
+                </div>
+                <div class="d2-task age-stale">
+                  <div class="d2-check"></div><span class="d2-text">Update billing sheet</span><span
+                    class="d2-age-pill">32d ↯</span><span class="d2-del">×</span>
+                </div>
+              </div>
+              <div class="d2-section">▸ Completed (2)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D3 mini -->
+        <div class="comp-item">
+          <div class="comp-label">3 · Card Stack</div>
+          <div class="comp-device" onclick="show('d3')">
+            <div class="d3-shell" style="width:390px">
+              <div class="d3-header">
+                <div class="d3-logo">📭 <span>MotivaTodo</span></div>
+              </div>
+              <div class="d3-input-row">
+                <div class="d3-input-card">
+                  <input class="d3-input" placeholder="Add a task…" readonly>
+                  <div class="d3-add-btn">+</div>
+                </div>
+              </div>
+              <div class="d3-list">
+                <div class="d3-card age-0">
+                  <div class="d3-check"></div><span class="d3-text">Review contract before Monday</span><span
+                    class="d3-del">×</span>
+                </div>
+                <div class="d3-card age-2">
+                  <div class="d3-check"></div><span class="d3-text">Call opposing counsel</span><span
+                    class="d3-del">×</span>
+                </div>
+                <div class="d3-card age-peak">
+                  <div class="d3-check"></div><span class="d3-text">File discovery documents</span><span
+                    class="d3-del">×</span>
+                </div>
+                <div class="d3-card age-stale" style="border-style:dashed">
+                  <div class="d3-check"></div><span class="d3-text">Update billing sheet</span><span
+                    class="d3-del">×</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D4 mini -->
+        <div class="comp-item">
+          <div class="comp-label">4 · Inset Panel</div>
+          <div class="comp-device" onclick="show('d4')">
+            <div class="d4-shell" style="width:390px">
+              <div class="d4-header">
+                <div class="d4-logo">📭 <span>MotivaTodo</span></div>
+              </div>
+              <div class="d4-panel">
+                <div class="d4-input-row">
+                  <input class="d4-input" placeholder="Add a task…" readonly>
+                  <div class="d4-add-btn">+</div>
+                </div>
+                <div class="d4-list">
+                  <div class="d4-task age-0">
+                    <div class="d4-check"></div><span class="d4-text">Review contract before Monday</span><span
+                      class="d4-del">×</span>
+                  </div>
+                  <div class="d4-task age-2">
+                    <div class="d4-check"></div><span class="d4-text">Call opposing counsel</span><span
+                      class="d4-del">×</span>
+                  </div>
+                  <div class="d4-task age-peak">
+                    <div class="d4-check"></div><span class="d4-text">File discovery documents</span><span
+                      class="d4-del">×</span>
+                  </div>
+                  <div class="d4-task age-stale">
+                    <div class="d4-check"></div><span class="d4-text">Update billing sheet</span><span
+                      class="d4-del">×</span>
+                  </div>
+                </div>
+                <div class="d4-section">▸ Completed (2)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D5 mini -->
+        <div class="comp-item">
+          <div class="comp-label">5 · Type-Forward</div>
+          <div class="comp-device" onclick="show('d5')">
+            <div class="d5-shell" style="width:390px">
+              <div class="d5-header">
+                <span class="d5-logo">📭 MotivaTodo</span>
+              </div>
+              <div class="d5-input-row">
+                <input class="d5-input" placeholder="What needs doing?" readonly>
+              </div>
+              <div class="d5-count">4 open tasks</div>
+              <div class="d5-list">
+                <div class="d5-task age-0">
+                  <div class="d5-check"></div><span class="d5-text">Review contract before Monday</span><span
+                    class="d5-del">×</span>
+                </div>
+                <div class="d5-task age-2">
+                  <div class="d5-check"></div><span class="d5-text">Call opposing counsel</span><span
+                    class="d5-meta">3d</span><span class="d5-del">×</span>
+                </div>
+                <div class="d5-task age-peak">
+                  <div class="d5-check"></div><span class="d5-text">File discovery documents</span><span
+                    class="d5-meta">31d</span><span class="d5-del">×</span>
+                </div>
+                <div class="d5-task age-stale">
+                  <div class="d5-check"></div><span class="d5-text">Update billing sheet</span><span class="d5-meta">↯
+                    stale</span><span class="d5-del">×</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- D6 mini -->
+        <div class="comp-item">
+          <div class="comp-label">6 · Intensity Bar</div>
+          <div class="comp-device" onclick="show('d6')">
+            <div class="d6-shell" style="width:390px">
+              <div class="d6-header">
+                <div class="d6-logo">📭 <span>MotivaTodo</span></div>
+              </div>
+              <div class="d6-input-row">
+                <div class="d6-bar-spacer"></div>
+                <input class="d6-input" placeholder="Add a task…" readonly>
+                <div class="d6-add-btn">+</div>
+              </div>
+              <div class="d6-list">
+                <div class="d6-task">
+                  <div class="d6-age-bar" style="background:transparent"></div>
+                  <div class="d6-task-inner">
+                    <div class="d6-check"></div><span class="d6-text">Review contract before Monday</span><span
+                      class="d6-del">×</span>
+                  </div>
+                </div>
+                <div class="d6-task">
+                  <div class="d6-age-bar" style="background:var(--zinc-200)"></div>
+                  <div class="d6-task-inner">
+                    <div class="d6-check"></div><span class="d6-text">Call opposing counsel</span><span
+                      class="d6-del">×</span>
+                  </div>
+                </div>
+                <div class="d6-task">
+                  <div class="d6-age-bar" style="background:var(--zinc-500)"></div>
+                  <div class="d6-task-inner">
+                    <div class="d6-check"></div><span class="d6-text">File discovery documents</span><span
+                      class="d6-del">×</span>
+                  </div>
+                </div>
+                <div class="d6-task">
+                  <div class="d6-age-bar"
+                    style="background:var(--zinc-400);border-radius:2px;border:1px dashed var(--zinc-500)"></div>
+                  <div class="d6-task-inner">
+                    <div class="d6-check"></div><span class="d6-text">Update billing sheet</span><span
+                      class="d6-del">×</span>
+                  </div>
+                </div>
+              </div>
+              <div class="d6-section">▸ Completed (2)</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /grid -->
+    </section>
+
+    <!-- ══════════════════ D1 FULL ══════════════════ -->
+    <section id="d1" class="section two-col">
+      <div class="device">
+        <div class="d1-shell">
+          <div class="d1-header">
+            <div class="d1-logo">📭 <span>MotivaTodo</span></div>
+            <span>4 tasks</span>
+          </div>
+          <div class="d1-input-row">
+            <input class="d1-input" placeholder="Add a task…">
+          </div>
+          <div class="d1-list">
+            <div class="d1-task age-0">
+              <div class="d1-check"></div><span class="d1-text">Review contract before Monday</span><span
+                class="d1-del">×</span>
+            </div>
+            <div class="d1-task age-1">
+              <div class="d1-check"></div><span class="d1-text">Send invoice to client</span><span
+                class="d1-del">×</span>
+            </div>
+            <div class="d1-task age-2">
+              <div class="d1-check"></div><span class="d1-text">Call opposing counsel</span><span
+                class="d1-del">×</span>
+            </div>
+            <div class="d1-task age-3">
+              <div class="d1-check"></div><span class="d1-text">Research plaintiff background</span><span
+                class="d1-del">×</span>
+            </div>
+            <div class="d1-task age-4">
+              <div class="d1-check"></div><span class="d1-text">Prepare deposition outline</span><span
+                class="d1-del">×</span>
+            </div>
+            <div class="d1-task age-peak">
+              <div class="d1-check"></div><span class="d1-text">File discovery documents</span><span
+                class="d1-del">×</span>
+            </div>
+            <div class="d1-task age-stale">
+              <div class="d1-check"></div><span class="d1-text">Update billing sheet</span><span class="d1-del">×</span>
+            </div>
+          </div>
+          <div class="d1-section-toggle">▸ Completed (2)</div>
+        </div>
+      </div>
+      <div class="desc-card">
+        <h3>Direction 1 · Minimal Line</h3>
+        <span class="tag">Invisible chrome</span>
+        <p>The list <em>is</em> the app. No borders, no cards, no container — just tasks on a white canvas. The only
+          visual signal is the zinc aging gradient applied directly to the row background.</p>
+        <p>Aging communicates through the lightest possible touch: the background subtly shifts from pure white toward
+          zinc-400 as days pass. Nothing competes for attention.</p>
+        <p class="pros">Strengths</p>
+        <ul>
+          <li>Maximum focus on task text</li>
+          <li>Fastest reading scan — no chrome</li>
+          <li>Aging most visible against white baseline</li>
+          <li>Very easy to implement with shadcn/ui</li>
+        </ul>
+        <p class="pros">Considerations</p>
+        <ul>
+          <li>Feels sparse on mobile with few tasks</li>
+          <li>Less tactile — no affordance cues</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════════════ D2 FULL ══════════════════ -->
+    <section id="d2" class="section two-col">
+      <div class="device">
+        <div class="d2-shell">
+          <div class="d2-header">
+            <div class="d2-logo">📭 <span>MotivaTodo</span></div>
+            <span style="font-size:12px;color:var(--zinc-500)">4 open</span>
+          </div>
+          <div class="d2-input-row">
+            <input class="d2-input" placeholder="Add a task…">
+          </div>
+          <div class="d2-list">
+            <div class="d2-task age-0">
+              <div class="d2-check"></div><span class="d2-text">Review contract before Monday</span><span
+                class="d2-del">×</span>
+            </div>
+            <div class="d2-task age-1">
+              <div class="d2-check"></div><span class="d2-text">Send invoice to client</span><span
+                class="d2-age-pill">2d</span><span class="d2-del">×</span>
+            </div>
+            <div class="d2-task age-2">
+              <div class="d2-check"></div><span class="d2-text">Call opposing counsel</span><span
+                class="d2-age-pill">5d</span><span class="d2-del">×</span>
+            </div>
+            <div class="d2-task age-3">
+              <div class="d2-check"></div><span class="d2-text">Research plaintiff background</span><span
+                class="d2-age-pill">10d</span><span class="d2-del">×</span>
+            </div>
+            <div class="d2-task age-4">
+              <div class="d2-check"></div><span class="d2-text">Prepare deposition outline</span><span
+                class="d2-age-pill">18d</span><span class="d2-del">×</span>
+            </div>
+            <div class="d2-task age-peak">
+              <div class="d2-check"></div><span class="d2-text">File discovery documents</span><span
+                class="d2-age-pill">31d</span><span class="d2-del">×</span>
+            </div>
+            <div class="d2-task age-stale">
+              <div class="d2-check"></div><span class="d2-text">Update billing sheet</span><span class="d2-age-pill">32d
+                ↯</span><span class="d2-del">×</span>
+            </div>
+          </div>
+          <div class="d2-section">▸ Completed (2)</div>
+        </div>
+      </div>
+      <div class="desc-card">
+        <h3>Direction 2 · Ruled Lines</h3>
+        <span class="tag">Newspaper / Legal pad</span>
+        <p>Strong ruled dividers inspired by legal pads and newspaper columns. The header and input are anchored by a
+          thick 2px border — structural, authoritative, professional.</p>
+        <p>This direction adds an optional age-in-days micro-label (e.g. "5d", "31d ↯") — a secondary signal layered
+          atop the background colour aging.</p>
+        <p class="pros">Strengths</p>
+        <ul>
+          <li>Strong visual structure — feels "official"</li>
+          <li>Age labels give lawyers precise information</li>
+          <li>Dividers aid scanning in dense lists</li>
+          <li>Matches law office aesthetic</li>
+        </ul>
+        <p class="pros">Considerations</p>
+        <ul>
+          <li>More visual weight — less pure minimal</li>
+          <li>Age labels may conflict with ambient passive system</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════════════ D3 FULL ══════════════════ -->
+    <section id="d3" class="section two-col">
+      <div class="device">
+        <div class="d3-shell">
+          <div class="d3-header">
+            <div class="d3-logo">📭 <span>MotivaTodo</span></div>
+            <span style="font-size:12px;color:var(--zinc-500)">4 tasks</span>
+          </div>
+          <div class="d3-input-row">
+            <div class="d3-input-card">
+              <input class="d3-input" placeholder="Add a task…">
+              <div class="d3-add-btn">+</div>
+            </div>
+          </div>
+          <div class="d3-list">
+            <div class="d3-card age-0">
+              <div class="d3-check"></div><span class="d3-text">Review contract before Monday</span><span
+                class="d3-del">×</span>
+            </div>
+            <div class="d3-card age-1">
+              <div class="d3-check"></div><span class="d3-text">Send invoice to client</span><span
+                class="d3-del">×</span>
+            </div>
+            <div class="d3-card age-2">
+              <div class="d3-check"></div><span class="d3-text">Call opposing counsel</span><span
+                class="d3-del">×</span>
+            </div>
+            <div class="d3-card age-3">
+              <div class="d3-check"></div><span class="d3-text">Research plaintiff background</span><span
+                class="d3-del">×</span>
+            </div>
+            <div class="d3-card age-4">
+              <div class="d3-check"></div><span class="d3-text">Prepare deposition outline</span><span
+                class="d3-del">×</span>
+            </div>
+            <div class="d3-card age-peak">
+              <div class="d3-check"></div><span class="d3-text">File discovery documents</span><span
+                class="d3-del">×</span>
+            </div>
+            <div class="d3-card age-stale" style="border-style:dashed">
+              <div class="d3-check"></div><span class="d3-text">Update billing sheet</span><span class="d3-del">×</span>
+            </div>
+          </div>
+          <div class="d3-section">▸ Completed (2)</div>
+        </div>
+      </div>
+      <div class="desc-card">
+        <h3>Direction 3 · Card Stack</h3>
+        <span class="tag">Modern / Tactile</span>
+        <p>Each task lives inside its own rounded card on a zinc-100 background. The card background color carries the
+          aging signal — fresh cards are white, aged cards drift toward zinc-400.</p>
+        <p>The stale card (32+ days) uses a dashed border to stand out from the solid-border stack. The input field is
+          also a card, maintaining visual consistency. Inspired by shadcn/ui Card component patterns.</p>
+        <p class="pros">Strengths</p>
+        <ul>
+          <li>Most tactile — feels like you can pick up a task</li>
+          <li>Dashed stale border highly distinctive</li>
+          <li>Cards naturally group aging levels visually</li>
+          <li>Familiar to shadcn/ui users</li>
+        </ul>
+        <p class="pros">Considerations</p>
+        <ul>
+          <li>More visual complexity than minimal</li>
+          <li>Cards on zinc-100 — less contrast for aging</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════════════ D4 FULL ══════════════════ -->
+    <section id="d4" class="section two-col">
+      <div class="device">
+        <div class="d4-shell">
+          <div class="d4-header">
+            <div class="d4-logo">📭 <span>MotivaTodo</span></div>
+            <span style="font-size:12px;color:var(--zinc-600)">4 tasks</span>
+          </div>
+          <div class="d4-panel">
+            <div class="d4-input-row">
+              <input class="d4-input" placeholder="Add a task…">
+              <div class="d4-add-btn">+</div>
+            </div>
+            <div class="d4-list">
+              <div class="d4-task age-0">
+                <div class="d4-check"></div><span class="d4-text">Review contract before Monday</span><span
+                  class="d4-del">×</span>
+              </div>
+              <div class="d4-task age-1">
+                <div class="d4-check"></div><span class="d4-text">Send invoice to client</span><span
+                  class="d4-del">×</span>
+              </div>
+              <div class="d4-task age-2">
+                <div class="d4-check"></div><span class="d4-text">Call opposing counsel</span><span
+                  class="d4-del">×</span>
+              </div>
+              <div class="d4-task age-3">
+                <div class="d4-check"></div><span class="d4-text">Research plaintiff background</span><span
+                  class="d4-del">×</span>
+              </div>
+              <div class="d4-task age-4">
+                <div class="d4-check"></div><span class="d4-text">Prepare deposition outline</span><span
+                  class="d4-del">×</span>
+              </div>
+              <div class="d4-task age-peak">
+                <div class="d4-check"></div><span class="d4-text">File discovery documents</span><span
+                  class="d4-del">×</span>
+              </div>
+              <div class="d4-task age-stale">
+                <div class="d4-check"></div><span class="d4-text">Update billing sheet</span><span
+                  class="d4-del">×</span>
+              </div>
+            </div>
+            <div class="d4-section">▸ Completed (2)</div>
+          </div>
+        </div>
+      </div>
+      <div class="desc-card">
+        <h3>Direction 4 · Inset Panel</h3>
+        <span class="tag">Contained / Premium</span>
+        <p>The entire list lives inside a single floating white panel on a zinc-200 background. The panel has a subtle
+          drop shadow that makes it feel elevated and intentional.</p>
+        <p>Aging rows sit inside the clean white container — the contrast between the zinc-200 outer background and the
+          aging task backgrounds inside creates a distinct framing effect.</p>
+        <p class="pros">Strengths</p>
+        <ul>
+          <li>Most premium/polished aesthetic</li>
+          <li>Panel clearly bounds the app's scope</li>
+          <li>Good contrast: aged tasks stand against inner white</li>
+          <li>Strong on tablet/desktop</li>
+        </ul>
+        <p class="pros">Considerations</p>
+        <ul>
+          <li>Panel borders reduce usable list width on mobile</li>
+          <li>Extra visual depth may distract from task content</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════════════ D5 FULL ══════════════════ -->
+    <section id="d5" class="section two-col">
+      <div class="device">
+        <div class="d5-shell">
+          <div class="d5-header">
+            <span class="d5-logo">📭 MotivaTodo</span>
+            <span style="font-size:12px;color:var(--zinc-400)">4 open</span>
+          </div>
+          <div class="d5-input-row">
+            <input class="d5-input" placeholder="What needs doing?">
+          </div>
+          <div class="d5-count">7 open tasks</div>
+          <div class="d5-list">
+            <div class="d5-task age-0">
+              <div class="d5-check"></div><span class="d5-text">Review contract before Monday</span><span
+                class="d5-del">×</span>
+            </div>
+            <div class="d5-task age-1">
+              <div class="d5-check"></div><span class="d5-text">Send invoice to client</span><span
+                class="d5-meta">2d</span><span class="d5-del">×</span>
+            </div>
+            <div class="d5-task age-2">
+              <div class="d5-check"></div><span class="d5-text">Call opposing counsel</span><span
+                class="d5-meta">5d</span><span class="d5-del">×</span>
+            </div>
+            <div class="d5-task age-3">
+              <div class="d5-check"></div><span class="d5-text">Research plaintiff background</span><span
+                class="d5-meta">10d</span><span class="d5-del">×</span>
+            </div>
+            <div class="d5-task age-4">
+              <div class="d5-check"></div><span class="d5-text">Prepare deposition outline</span><span
+                class="d5-meta">18d</span><span class="d5-del">×</span>
+            </div>
+            <div class="d5-task age-peak">
+              <div class="d5-check"></div><span class="d5-text">File discovery documents</span><span
+                class="d5-meta">31d</span><span class="d5-del">×</span>
+            </div>
+            <div class="d5-task age-stale">
+              <div class="d5-check"></div><span class="d5-text">Update billing sheet</span><span class="d5-meta">↯
+                stale</span><span class="d5-del">×</span>
+            </div>
+          </div>
+          <div class="d5-section">▸ Completed (2)</div>
+        </div>
+      </div>
+      <div class="desc-card">
+        <h3>Direction 5 · Type-Forward</h3>
+        <span class="tag">Editorial / Confident</span>
+        <p>Typography at 18px is the dominant element — task text is given maximum real estate. The logo scales to 22px
+          bold. The input's underline-only style invites typing with minimal friction.</p>
+        <p>A compact "N open tasks" counter provides status at a glance. Aging still applies via zinc background rows,
+          but the larger text scale means aging contrast is read faster.</p>
+        <p class="pros">Strengths</p>
+        <ul>
+          <li>Tasks read effortlessly — great for quick scanning</li>
+          <li>Confident, editorial feel matches lawyer persona</li>
+          <li>Aging perceived fastest at larger text scale</li>
+          <li>Input underline feels like a signature-ready form field</li>
+        </ul>
+        <p class="pros">Considerations</p>
+        <ul>
+          <li>Fewer tasks visible at once before scrolling</li>
+          <li>Dense task lists require more vertical space</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════════════ D6 FULL ══════════════════ -->
+    <section id="d6" class="section two-col">
+      <div class="device">
+        <div class="d6-shell">
+          <div class="d6-header">
+            <div class="d6-logo">📭 <span>MotivaTodo</span></div>
+            <span style="font-size:12px;color:var(--zinc-500)">4 tasks</span>
+          </div>
+          <div class="d6-input-row">
+            <div class="d6-bar-spacer"></div>
+            <input class="d6-input" placeholder="Add a task…">
+            <div class="d6-add-btn">+</div>
+          </div>
+          <div class="d6-list">
+            <div class="d6-task" style="background:var(--white)">
+              <div class="d6-age-bar" style="background:transparent"></div>
+              <div class="d6-task-inner">
+                <div class="d6-check"></div><span class="d6-text">Review contract before Monday</span><span
+                  class="d6-del">×</span>
+              </div>
+            </div>
+            <div class="d6-task">
+              <div class="d6-age-bar" style="background:var(--zinc-100)"></div>
+              <div class="d6-task-inner">
+                <div class="d6-check"></div><span class="d6-text">Send invoice to client</span><span
+                  class="d6-del">×</span>
+              </div>
+            </div>
+            <div class="d6-task">
+              <div class="d6-age-bar" style="background:var(--zinc-200)"></div>
+              <div class="d6-task-inner">
+                <div class="d6-check"></div><span class="d6-text">Call opposing counsel</span><span
+                  class="d6-del">×</span>
+              </div>
+            </div>
+            <div class="d6-task">
+              <div class="d6-age-bar" style="background:var(--zinc-300)"></div>
+              <div class="d6-task-inner">
+                <div class="d6-check"></div><span class="d6-text">Research plaintiff background</span><span
+                  class="d6-del">×</span>
+              </div>
+            </div>
+            <div class="d6-task">
+              <div class="d6-age-bar" style="background:var(--zinc-400)"></div>
+              <div class="d6-task-inner">
+                <div class="d6-check"></div><span class="d6-text">Prepare deposition outline</span><span
+                  class="d6-del">×</span>
+              </div>
+            </div>
+            <div class="d6-task">
+              <div class="d6-age-bar" style="background:var(--zinc-600)"></div>
+              <div class="d6-task-inner">
+                <div class="d6-check"></div><span class="d6-text">File discovery documents</span><span
+                  class="d6-del">×</span>
+              </div>
+            </div>
+            <div class="d6-task">
+              <div class="d6-age-bar" style="background:var(--zinc-400);border:1px dashed var(--zinc-600)"></div>
+              <div class="d6-task-inner">
+                <div class="d6-check"></div><span class="d6-text">Update billing sheet</span><span
+                  class="d6-del">×</span>
+              </div>
+            </div>
+          </div>
+          <div class="d6-section">▸ Completed (2)</div>
+        </div>
+      </div>
+      <div class="desc-card">
+        <h3>Direction 6 · Intensity Bar</h3>
+        <span class="tag">Data-forward / Analytical</span>
+        <p>All task rows have a white background. Instead, a 4px vertical bar on the left edge of each row carries the
+          full aging signal — from transparent (fresh) to zinc-600 (peak). The row background stays pristine.</p>
+        <p>This approach separates data signal from readability: text is always maximally readable against white, while
+          the bar is a compact "age thermometer." Inspired by IDE gutter markers and Kanban urgency indicators.</p>
+        <p class="pros">Strengths</p>
+        <ul>
+          <li>Maximum text contrast — white background always</li>
+          <li>Age signal is compact and glanceable</li>
+          <li>Works well for colorblind users (bar is structural)</li>
+          <li>Most "developer / analytical" feel</li>
+        </ul>
+        <p class="pros">Considerations</p>
+        <ul>
+          <li>Bar is less ambient — requires deliberate attention</li>
+          <li>Less evocative of "physical aging" metaphor</li>
+          <li>Not as dramatic as full background shift</li>
+        </ul>
+      </div>
+    </section>
+
+  </div><!-- /page -->
+
+  <script>
+    function show (id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+      document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('visible');
+      const pills = document.querySelectorAll('.nav-pill');
+      const order = ['overview', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6'];
+      pills[order.indexOf(id)].classList.add('active');
+      window.scrollTo(0, 0);
+    }
+  </script>
+</body>
+
+</html>
