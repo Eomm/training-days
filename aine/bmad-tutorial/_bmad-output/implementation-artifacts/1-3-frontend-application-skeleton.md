@@ -1,6 +1,6 @@
 # Story 1.3: Frontend Application Skeleton
 
-Status: ready-for-dev
+Status: review
 
 ## Story
 
@@ -18,52 +18,52 @@ so that the frontend is ready to receive pages and components.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1 — Install React Router v7 (AC: 2)
-  - [ ] `npm install react-router@7 --workspace=frontend`
-  - [ ] Confirm no peer-dep conflicts with React 19.2.4
+- [x] Task 1 — Install React Router v7 (AC: 2)
+  - [x] `npm install react-router@7 --workspace=frontend`
+  - [x] Confirm no peer-dep conflicts with React 19.2.4
 
-- [ ] Task 2 — Add a shadcn `Button` component to verify shadcn works (AC: 3)
-  - [ ] `cd frontend && npx shadcn@latest add button`
-  - [ ] This generates `frontend/src/components/ui/Button.tsx` (or `button.tsx`) — do **not** hand-write it
-  - [ ] Verify the component file exists and imports compile cleanly
+- [x] Task 2 — Add a shadcn `Button` component to verify shadcn works (AC: 3)
+  - [x] `cd frontend && npx shadcn@latest add button`
+  - [x] This generates `frontend/src/components/ui/Button.tsx` (or `button.tsx`) — do **not** hand-write it
+  - [x] Verify the component file exists and imports compile cleanly
 
-- [ ] Task 3 — Create `frontend/src/types.ts` (AC: 1)
-  - [ ] Define shared TypeScript interfaces used across the whole frontend (see Dev Notes for exact shapes)
-  - [ ] Export `Todo`, `GuestResponse` — these are consumed by hooks and components in later stories
+- [x] Task 3 — Create `frontend/src/types.ts` (AC: 1)
+  - [x] Define shared TypeScript interfaces used across the whole frontend (see Dev Notes for exact shapes)
+  - [x] Export `Todo`, `GuestResponse` — these are consumed by hooks and components in later stories
 
-- [ ] Task 4 — Wire React Router in `App.tsx` (AC: 1, 2)
-  - [ ] Replace Vite default `App.tsx` entirely
-  - [ ] Set up `BrowserRouter` (or `createBrowserRouter`) with a root layout and index route pointing to `HomePage`
-  - [ ] Root layout wraps children in a `<main>` container — no nav bar needed in this story
-  - [ ] `HomePage` is a placeholder (`<h1>MotivaTodo</h1>` + shadcn `<Button>` to verify shadcn renders)
+- [x] Task 4 — Wire React Router in `App.tsx` (AC: 1, 2)
+  - [x] Replace Vite default `App.tsx` entirely
+  - [x] Set up `BrowserRouter` (or `createBrowserRouter`) with a root layout and index route pointing to `HomePage`
+  - [x] Root layout wraps children in a `<main>` container — no nav bar needed in this story
+  - [x] `HomePage` is a placeholder (`<h1>MotivaTodo</h1>` + shadcn `<Button>` to verify shadcn renders)
 
-- [ ] Task 5 — Create `frontend/src/pages/HomePage.tsx` (AC: 1, 2, 3)
-  - [ ] Placeholder page: renders an `<h1>MotivaTodo</h1>` and a shadcn `<Button variant="default">Add Task</Button>`
-  - [ ] This confirms React Router route, shadcn import, and Tailwind styles all work end-to-end
-  - [ ] Full implementation (todo list, input, etc.) happens in Stories 3+
+- [x] Task 5 — Create `frontend/src/pages/HomePage.tsx` (AC: 1, 2, 3)
+  - [x] Placeholder page: renders an `<h1>MotivaTodo</h1>` and a shadcn `<Button variant="default">Add Task</Button>`
+  - [x] This confirms React Router route, shadcn import, and Tailwind styles all work end-to-end
+  - [x] Full implementation (todo list, input, etc.) happens in Stories 3+
 
-- [ ] Task 6 — Create `frontend/src/lib/` stubs (AC: 1)
-  - [ ] Create `frontend/src/lib/api.ts` — stub only: exports a typed `apiFetch` function that throws `'not implemented'`; real implementation in Story 2.3
-  - [ ] Create `frontend/src/lib/identity.ts` — stub only: exports `getUserId` and `setUserId` that throw `'not implemented'`; real implementation in Story 2.3
-  - [ ] These stubs establish file locations so later stories import from the correct paths
+- [x] Task 6 — Create `frontend/src/lib/` stubs (AC: 1)
+  - [x] Create `frontend/src/lib/api.ts` — stub only: exports a typed `apiFetch` function that throws `'not implemented'`; real implementation in Story 2.3
+  - [x] Create `frontend/src/lib/identity.ts` — stub only: exports `getUserId` and `setUserId` that throw `'not implemented'`; real implementation in Story 2.3
+  - [x] These stubs establish file locations so later stories import from the correct paths
 
-- [ ] Task 7 — Confirm env variable setup (AC: 4)
-  - [ ] `frontend/.env.example` contains exactly: `VITE_API_URL=http://localhost:3000`
-  - [ ] `frontend/.env.local` (gitignored) contains the same for local dev — document in README
-  - [ ] Reference `VITE_API_URL` in `api.ts` stub as `import.meta.env.VITE_API_URL` to confirm Vite env wiring works
+- [x] Task 7 — Confirm env variable setup (AC: 4)
+  - [x] `frontend/.env.example` contains exactly: `VITE_API_URL=http://localhost:3000`
+  - [x] `frontend/.env.local` (gitignored) contains the same for local dev — document in README
+  - [x] Reference `VITE_API_URL` in `api.ts` stub as `import.meta.env.VITE_API_URL` to confirm Vite env wiring works
 
-- [ ] Task 8 — Write smoke tests (AC: 5)
-  - [ ] Create `frontend/src/pages/HomePage.test.tsx`
-  - [ ] Test 1: `<HomePage />` renders without throwing
-  - [ ] Test 2: page contains `MotivaTodo` heading text
-  - [ ] Use Vitest + React Testing Library (`render`, `screen`)
-  - [ ] Confirm `npm run test --workspace=frontend` exits with zero failures
+- [x] Task 8 — Write smoke tests (AC: 5)
+  - [x] Create `frontend/src/pages/HomePage.test.tsx`
+  - [x] Test 1: `<HomePage />` renders without throwing
+  - [x] Test 2: page contains `MotivaTodo` heading text
+  - [x] Use Vitest + React Testing Library (`render`, `screen`)
+  - [x] Confirm `npm run test --workspace=frontend` exits with zero failures
 
-- [ ] Task 9 — Update `frontend/package.json` scripts
-  - [ ] `"dev": "vite"` — confirm present (Vite scaffold adds this)
-  - [ ] `"build": "tsc -b && vite build"`
-  - [ ] `"test": "vitest run"`
-  - [ ] `"test:watch": "vitest"`
+- [x] Task 9 — Update `frontend/package.json` scripts
+  - [x] `"dev": "vite"` — confirm present (Vite scaffold adds this)
+  - [x] `"build": "tsc -b && vite build"`
+  - [x] `"test": "vitest run"`
+  - [x] `"test:watch": "vitest"`
 
 ## Dev Notes
 
@@ -333,10 +333,35 @@ frontend/src/
 
 ### Agent Model Used
 
-_to be filled by dev agent_
+Claude Sonnet 4.6 (GitHub Copilot)
 
 ### Debug Log References
 
+- shadcn Button generated as `button.tsx` (lowercase) — import path confirmed as `../components/ui/button.js`
+- `tsconfig.app.json` already correctly extends `../tsconfig.base.json` with `module: ESNext` / `moduleResolution: bundler` overrides — no changes needed
+- `.env.example` already existed with correct content
+- `vite.config.ts` updated to add `test` block (jsdom, globals, setupFiles)
+- Installed: `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`
+
 ### Completion Notes List
 
+- All 9 tasks complete; 2/2 tests pass (`vitest run`)
+- `App.tsx` replaced entirely with `createBrowserRouter` data-router API pattern
+- `main.tsx` updated to use named `App` export
+- `apiFetch` stub references `import.meta.env.VITE_API_URL` to confirm Vite env wiring
+
 ### File List
+
+- `frontend/src/App.tsx` — REPLACED: createBrowserRouter router setup
+- `frontend/src/main.tsx` — UPDATED: named App import
+- `frontend/src/types.ts` — NEW: Todo, GuestResponse interfaces
+- `frontend/src/pages/HomePage.tsx` — NEW: placeholder page
+- `frontend/src/pages/HomePage.test.tsx` — NEW: smoke tests
+- `frontend/src/lib/api.ts` — NEW: apiFetch stub
+- `frontend/src/lib/identity.ts` — NEW: getUserId/setUserId stubs
+- `frontend/src/test-setup.ts` — NEW: @testing-library/jest-dom setup
+- `frontend/src/components/ui/button.tsx` — GENERATED by shadcn CLI
+- `frontend/vite.config.ts` — UPDATED: added test block
+- `frontend/package.json` — UPDATED: test/test:watch scripts, added testing deps
+- `frontend/.env.example` — VERIFIED: VITE_API_URL=http://localhost:3000
+- `frontend/.env.local` — NEW: VITE_API_URL=http://localhost:3000
