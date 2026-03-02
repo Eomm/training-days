@@ -85,5 +85,6 @@ development_status:
   6-1-retrospective-leftovers: done
 
   # Epic 7: Developer Tooling & Code Quality
-  epic-7: done
+  epic-7: in-progress
   7-1-opinionated-linter-be-fe: done
+  7-2-fix-long-text-overflow-todoitem: review

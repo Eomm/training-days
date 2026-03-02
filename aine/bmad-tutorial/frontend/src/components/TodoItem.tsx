@@ -39,7 +39,7 @@ export const TodoItem = forwardRef<HTMLLIElement, TodoItemProps>(
           if (fadingOut && e.propertyName === "opacity") onFadeComplete?.();
         }}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <button
             type="button"
             aria-label={`Mark "${todo.text}" as complete`}
@@ -55,7 +55,7 @@ export const TodoItem = forwardRef<HTMLLIElement, TodoItemProps>(
             />
           </button>
           <span
-            className={`flex-1 ${todo.done ? "line-through text-zinc-600" : ""}`}
+            className={`flex-1 min-w-0 break-words ${todo.done ? "line-through text-zinc-600" : ""}`}
           >
             {todo.text}
           </span>

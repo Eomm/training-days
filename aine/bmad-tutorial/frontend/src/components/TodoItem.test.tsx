@@ -243,4 +243,26 @@ describe("TodoItem", () => {
     const btn = screen.getByRole("button", { name: /delete "write tests"/i });
     expect(btn.getAttribute("aria-label")).toBe('Delete "Write tests"');
   });
+
+  it("renders long unbroken text with break-words class to prevent overflow", () => {
+    const longTodo: Todo = {
+      ...todo,
+      text: "a".repeat(500),
+    };
+    const { container } = render(
+      <TodoItem
+        todo={longTodo}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+        agingClass="bg-white"
+      />,
+    );
+    const textSpan = container.querySelector("span.break-words");
+    expect(textSpan).toBeTruthy();
+    expect(textSpan?.textContent).toBe("a".repeat(500));
+
+    // flex row must have min-w-0 so children can shrink below content size
+    const flexRow = container.querySelector("div.min-w-0");
+    expect(flexRow).toBeTruthy();
+  });
 });
