@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node --experimental-strip-types --watch src/server.ts",
+    "start": "node dist/server.js",
     "build": "tsc",
-    "test": "node --test"
+    "test": "node --experimental-strip-types --test 'test/**/*.test.ts'"
   },
   "keywords": [],
   "author": "",
@@ -21,8 +22,11 @@
     "@fastify/env": "^5.0.3",
     "@fastify/helmet": "^13.0.2",
     "@fastify/rate-limit": "^10.3.0",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
     "drizzle-orm": "^0.45.1",
     "fastify": "^5.7.4",
+    "fastify-plugin": "^5.1.0",
     "postgres": "^3.4.8"
   }
 }
