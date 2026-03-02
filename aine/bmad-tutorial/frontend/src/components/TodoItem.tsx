@@ -64,7 +64,7 @@ export const TodoItem = forwardRef<HTMLLIElement, TodoItemProps>(
             size="icon"
             aria-label={`Delete "${todo.text}"`}
             onClick={() => onDelete(todo.id)}
-            className="text-zinc-500 hover:text-red-500 min-h-[44px] min-w-[44px]"
+            className="text-zinc-700 hover:text-red-500 min-h-[44px] min-w-[44px]"
           >
             <Trash2 className="w-4 h-4" />
           </Button>

@@ -42,7 +42,9 @@ export function HomePage() {
 
   return (
     <div className="flex flex-col items-center gap-4 py-4 lg:py-8 w-full px-4 lg:max-w-lg lg:mx-auto">
-      <h1 className="text-2xl font-bold">MotivaTodo</h1>
+      <h1 className="text-2xl font-bold">
+        <span aria-hidden="true">{userId ? '📫' : '📭'}</span> MotivaTodo
+      </h1>
       {error && (
         <div
           role="alert"

@@ -43,7 +43,7 @@ test('POST /guest response body contains only userId', async (t) => {
   assert.deepEqual(Object.keys(body).sort(), ['userId'])
 })
 
-test('POST /guest with extra properties in body returns 400', async (t) => {
+test('POST /guest with extra properties in body strips them and returns 201', async (t) => {
   const app = await build({ logger: false })
   t.after(() => app.close())
 
@@ -53,5 +53,10 @@ test('POST /guest with extra properties in body returns 400', async (t) => {
     headers: { 'content-type': 'application/json' },
     payload: JSON.stringify({ sneaky: 'field' }),
   })
-  assert.equal(res.statusCode, 400)
+  // Fastify's default Ajv has removeAdditional: true — extra properties
+  // are silently stripped rather than rejected. POST /guest doesn't use
+  // body data anyway (UUID is generated server-side), so 201 is correct.
+  assert.equal(res.statusCode, 201)
+  const body = res.json<Record<string, unknown>>()
+  assert.deepEqual(Object.keys(body).sort(), ['userId'])
 })

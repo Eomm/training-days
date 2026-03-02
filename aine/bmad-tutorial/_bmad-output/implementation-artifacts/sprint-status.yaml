@@ -47,14 +47,14 @@ development_status:
   1-3-frontend-application-skeleton: done
   1-4-database-connection-migration-tooling: done
   1-5-docker-compose-full-stack: done
-  epic-1-retrospective: optional
+  epic-1-retrospective: done
 
   # Epic 2: Anonymous Identity & Frictionless First Visit
   epic-2: done
   2-1-guest-identity-endpoint: done
   2-2-user-identity-hook-header-enforcement: done
   2-3-client-side-identity-initialization: done
-  epic-2-retrospective: optional
+  epic-2-retrospective: done
 
   # Epic 3: Core Task Operations
   epic-3: done
@@ -62,20 +62,24 @@ development_status:
   3-2-add-todo: done
   3-3-mark-todo-as-done-motivational-quote: done
   3-4-delete-todo: done
-  epic-3-retrospective: optional
+  epic-3-retrospective: done
 
   # Epic 4: Visual Task Aging & Passive Prioritization
   epic-4: done
   4-1-visual-age-highlighting-algorithm: done
   4-2-staleness-threshold-contextual-prompt: done
   4-3-empty-state: done
-  epic-4-retrospective: optional
+  epic-4-retrospective: done
 
   # Epic 5: Accessible & Responsive Experience
-  epic-5: in-progress
+  epic-5: done
   5-1-mobile-first-responsive-layout: done
   5-2-keyboard-navigation-focus-management: done
   5-3-screen-reader-aria-accessibility: done
-  5-4-color-contrast-visual-aging-wcag-compliance: backlog
-  5-5-error-state-registration-nudge: backlog
-  epic-5-retrospective: optional
+  5-4-color-contrast-visual-aging-wcag-compliance: done
+  5-5-error-state-registration-nudge: done
+  epic-5-retrospective: done
+
+  # Epic 6: Retrospective Housekeeping
+  epic-6: done
+  6-1-retrospective-leftovers: done

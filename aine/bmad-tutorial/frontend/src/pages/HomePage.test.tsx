@@ -21,6 +21,19 @@ describe("HomePage", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows 📭 emoji when no userId is set", () => {
+    render(<HomePage />);
+    const heading = screen.getByRole("heading", { name: /motivatodo/i });
+    expect(heading.textContent).toContain("📭");
+  });
+
+  it("shows 📫 emoji when userId is set", () => {
+    localStorage.setItem("motivatodo_user_id", "test-user-123");
+    render(<HomePage />);
+    const heading = screen.getByRole("heading", { name: /motivatodo/i });
+    expect(heading.textContent).toContain("📫");
+  });
+
   it("applies mobile-first responsive wrapper classes", () => {
     const { container } = render(<HomePage />);
     const wrapper = container.firstElementChild as HTMLElement;

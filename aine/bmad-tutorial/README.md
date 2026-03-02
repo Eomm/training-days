@@ -73,6 +73,72 @@ motivatodo/
     └── ...
 ```
 
+## Docker Compose
+
+Run the full stack (PostgreSQL + backend + frontend) with Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+| Service    | URL                   |
+| ---------- | --------------------- |
+| Frontend   | http://localhost:8080 |
+| Backend    | http://localhost:3000 |
+| PostgreSQL | localhost:5432        |
+
+Rebuild images after code changes:
+
+```bash
+docker compose build
+```
+
+Rebuild and restart in one command:
+
+```bash
+docker compose up -d --build
+```
+
+View logs:
+
+```bash
+docker compose logs -f            # all services
+docker compose logs -f backend    # single service
+```
+
+Stop all services:
+
+```bash
+docker compose down
+```
+
+Stop and remove volumes (wipes database):
+
+```bash
+docker compose down -v
+```
+
+### Default Environment Variables
+
+| Variable            | Default                                                   |
+| ------------------- | --------------------------------------------------------- |
+| `POSTGRES_DB`       | motivatodo                                                |
+| `POSTGRES_USER`     | motivatodo                                                |
+| `POSTGRES_PASSWORD` | motivatodo                                                |
+| `POSTGRES_PORT`     | 5432                                                      |
+| `DATABASE_URL`      | postgres://motivatodo:motivatodo@postgres:5432/motivatodo |
+| `PORT`              | 3000                                                      |
+| `CORS_ORIGIN`       | http://localhost:8080                                     |
+| `VITE_API_URL`      | http://localhost:3000                                     |
+| `FRONTEND_PORT`     | 8080                                                      |
+| `BACKEND_PORT`      | 3000                                                      |
+
+Override any variable by setting it in a `.env` file at the project root or inline:
+
+```bash
+FRONTEND_PORT=9090 docker compose up -d
+```
+
 ## Environment Variables
 
 Copy the example env files before running locally:
