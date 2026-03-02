@@ -72,10 +72,10 @@ development_status:
   epic-4-retrospective: optional
 
   # Epic 5: Accessible & Responsive Experience
-  epic-5: backlog
-  5-1-mobile-first-responsive-layout: backlog
-  5-2-keyboard-navigation-focus-management: backlog
-  5-3-screen-reader-aria-accessibility: backlog
+  epic-5: in-progress
+  5-1-mobile-first-responsive-layout: done
+  5-2-keyboard-navigation-focus-management: done
+  5-3-screen-reader-aria-accessibility: done
   5-4-color-contrast-visual-aging-wcag-compliance: backlog
   5-5-error-state-registration-nudge: backlog
   epic-5-retrospective: optional

@@ -5,17 +5,17 @@ import { useGuestIdentity } from "./hooks/useGuestIdentity.ts";
 function RootLayout() {
   const { isLoading } = useGuestIdentity();
 
-  if (isLoading) {
-    return (
-      <main className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-gray-500">Loading…</p>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-white">
-      <Outlet />
+    <main
+      className={`min-h-screen bg-white${isLoading ? " flex items-center justify-center" : ""}`}
+    >
+      <a
+        href="#task-input"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-white focus:px-4 focus:py-2"
+      >
+        Skip to task input
+      </a>
+      {isLoading ? <p className="text-gray-500">Loading…</p> : <Outlet />}
     </main>
   );
 }

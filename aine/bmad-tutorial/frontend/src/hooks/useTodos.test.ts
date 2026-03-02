@@ -193,3 +193,26 @@ describe('useTodos — deleteTodo', () => {
     expect(result.current.error).toMatch(/HTTP 403/)
   })
 })
+
+describe('useTodos — retryFetch', () => {
+  it('re-fetches todos when retryFetch is called after an error', async () => {
+    const todos = [makeTodo({ text: 'Recovered task' })]
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: false, status: 500 })               // first fetch fails
+      .mockResolvedValueOnce({ ok: true, status: 200, json: () => Promise.resolve(todos) }) // retry succeeds
+
+    vi.stubGlobal('fetch', fetchMock)
+
+    const { result } = renderHook(() => useTodos('user-1'))
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+    expect(result.current.error).toMatch(/HTTP 500/)
+
+    await act(async () => {
+      result.current.retryFetch()
+    })
+
+    await waitFor(() => expect(result.current.todos).toHaveLength(1))
+    expect(result.current.todos[0].text).toBe('Recovered task')
+    expect(result.current.error).toBeNull()
+  })
+})

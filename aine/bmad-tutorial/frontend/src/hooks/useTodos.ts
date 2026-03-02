@@ -1,5 +1,5 @@
 // frontend/src/hooks/useTodos.ts
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { apiFetch } from '../lib/api.ts'
 import type { Todo } from '../types.ts'
 
@@ -7,6 +7,8 @@ export function useTodos(userId: string | null): {
   todos: Todo[]
   isLoading: boolean
   error: string | null
+  clearError: () => void
+  retryFetch: () => void
   addTodo: (text: string) => Promise<void>
   markDone: (id: string) => Promise<void>
   deleteTodo: (id: string) => Promise<void>
@@ -23,6 +25,10 @@ export function useTodos(userId: string | null): {
   const [quote, setQuote] = useState<string | null>(null)
   const [pendingQuote, setPendingQuote] = useState<string | null>(null)
   const [lastDoneId, setLastDoneId] = useState<string | null>(null)
+  const [fetchKey, setFetchKey] = useState(0)
+
+  const retryFetch = useCallback(() => setFetchKey((k) => k + 1), [])
+  const clearError = useCallback(() => setError(null), [])
 
   useEffect(() => {
     if (userId === null) return
@@ -43,7 +49,7 @@ export function useTodos(userId: string | null): {
       })
 
     return () => { cancelled = true }
-  }, [userId])
+  }, [userId, fetchKey])
 
   async function addTodo(text: string): Promise<void> {
     const tempId = crypto.randomUUID()
@@ -117,5 +123,5 @@ export function useTodos(userId: string | null): {
     }
   }
 
-  return { todos, isLoading, error, addTodo, markDone, deleteTodo, quote, clearQuote: () => setQuote(null), lastDoneId, pendingQuote, showPendingQuote, removeDoneTodo }
+  return { todos, isLoading, error, clearError, retryFetch, addTodo, markDone, deleteTodo, quote, clearQuote: () => setQuote(null), lastDoneId, pendingQuote, showPendingQuote, removeDoneTodo }
 }

@@ -36,7 +36,9 @@ describe("TodoItem", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /mark as done/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /mark "write tests" as complete/i }),
+    );
     expect(onDone).toHaveBeenCalledWith("todo-1");
   });
 
@@ -51,7 +53,9 @@ describe("TodoItem", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /delete todo/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /delete "write tests"/i }),
+    );
     expect(onDelete).toHaveBeenCalledWith("todo-1");
   });
 
@@ -159,5 +163,84 @@ describe("TodoItem", () => {
     const li = container.querySelector("li");
     expect(li?.className).toContain("opacity-100");
     expect(li?.className).not.toContain("opacity-0");
+  });
+
+  it("mark-done control is a focusable button element (keyboard operable via Enter/Space natively)", () => {
+    render(
+      <TodoItem
+        todo={todo}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+        agingClass="bg-white"
+      />,
+    );
+    const btn = screen.getByRole("button", {
+      name: /mark "write tests" as complete/i,
+    });
+    expect(btn.tagName).toBe("BUTTON");
+    expect(btn).not.toHaveAttribute("tabindex", "-1");
+    btn.focus();
+    expect(document.activeElement).toBe(btn);
+  });
+
+  it("delete control is a focusable button element (keyboard operable via Enter/Space natively)", () => {
+    render(
+      <TodoItem
+        todo={todo}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+        agingClass="bg-white"
+      />,
+    );
+    const btn = screen.getByRole("button", { name: /delete "write tests"/i });
+    expect(btn.tagName).toBe("BUTTON");
+    expect(btn).not.toHaveAttribute("tabindex", "-1");
+    btn.focus();
+    expect(document.activeElement).toBe(btn);
+  });
+
+  it("has focus-visible ring classes on mark-done button", () => {
+    render(
+      <TodoItem
+        todo={todo}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+        agingClass="bg-white"
+      />,
+    );
+    const btn = screen.getByRole("button", {
+      name: /mark "write tests" as complete/i,
+    });
+    expect(btn.className).toContain("focus-visible:ring-2");
+  });
+
+  it("mark-done aria-label includes the todo text", () => {
+    render(
+      <TodoItem
+        todo={todo}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+        agingClass="bg-white"
+      />,
+    );
+    const btn = screen.getByRole("button", {
+      name: /mark "write tests" as complete/i,
+    });
+    expect(btn.getAttribute("aria-label")).toBe(
+      'Mark "Write tests" as complete',
+    );
+  });
+
+  it("delete aria-label includes the todo text", () => {
+    render(
+      <TodoItem
+        todo={todo}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+        agingClass="bg-white"
+      />,
+    );
+    const btn = screen.getByRole("button", { name: /delete "write tests"/i });
+    expect(btn.getAttribute("aria-label")).toBe('Delete "Write tests"');
   });
 });

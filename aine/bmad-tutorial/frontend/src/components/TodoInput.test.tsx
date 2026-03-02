@@ -61,4 +61,15 @@ describe("TodoInput", () => {
 
     expect(input.value).toBe("");
   });
+
+  it("returns focus to input after submission", () => {
+    const onAdd = vi.fn();
+    render(<TodoInput onAdd={onAdd} />);
+
+    const input = screen.getByPlaceholderText("Add a task…");
+    fireEvent.change(input, { target: { value: "Focus test" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    expect(document.activeElement).toBe(input);
+  });
 });

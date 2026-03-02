@@ -187,3 +187,79 @@ describe('getAgingClass', () => {
     expect(getAgingClass(100)).toBe('bg-zinc-400')
   })
 })
+
+// ---------------------------------------------------------------------------
+// WCAG 2.1 AA Contrast Verification
+// ---------------------------------------------------------------------------
+// Contrast Ratio formula: CR = (L1 + 0.05) / (L2 + 0.05), where L1 > L2.
+// WCAG AA requires CR ≥ 4.5:1 for normal text, ≥ 3:1 for large text (≥18pt or ≥14pt bold).
+//
+// Aging tier backgrounds (Tailwind zinc palette):
+//   bg-white    #ffffff  L ≈ 1.000
+//   bg-zinc-100 #f4f4f5  L ≈ 0.905
+//   bg-zinc-200 #e4e4e7  L ≈ 0.778
+//   bg-zinc-300 #d4d4d8  L ≈ 0.660
+//   bg-zinc-400 #a1a1aa  L ≈ 0.359
+//
+// Text colours used:
+//   zinc-900 #18181b  L ≈ 0.0093  (task text — normal state)
+//   zinc-700 #3f3f46  L ≈ 0.051   (staleness text — "Is this task still ongoing?")
+//   zinc-600 #52525b  L ≈ 0.086   (done/strikethrough task text — always on bg-white)
+// ---------------------------------------------------------------------------
+
+/** Linearise an sRGB channel value (0-255). */
+function linearise(c8: number): number {
+  const c = c8 / 255
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+}
+
+/** Relative luminance of an RGB hex colour (#rrggbb). */
+function luminance(hex: string): number {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return 0.2126 * linearise(r) + 0.7152 * linearise(g) + 0.0722 * linearise(b)
+}
+
+/** WCAG contrast ratio between two hex colours. */
+function contrastRatio(hex1: string, hex2: string): number {
+  const l1 = Math.max(luminance(hex1), luminance(hex2))
+  const l2 = Math.min(luminance(hex1), luminance(hex2))
+  return (l1 + 0.05) / (l2 + 0.05)
+}
+
+// Tailwind colour values used in the aging system
+const BACKGROUNDS: Record<string, string> = {
+  'bg-white': '#ffffff',
+  'bg-zinc-100': '#f4f4f5',
+  'bg-zinc-200': '#e4e4e7',
+  'bg-zinc-300': '#d4d4d8',
+  'bg-zinc-400': '#a1a1aa',
+}
+
+const ZINC_900 = '#18181b' // normal task text
+const ZINC_700 = '#3f3f46' // staleness prompt text
+const ZINC_600 = '#52525b' // done / strikethrough text (only on bg-white)
+
+describe('WCAG 2.1 AA contrast — aging tier backgrounds vs task text (zinc-900)', () => {
+  for (const [cls, bg] of Object.entries(BACKGROUNDS)) {
+    it(`${cls} (${bg}) meets 4.5:1 AA with zinc-900 task text`, () => {
+      const cr = contrastRatio(bg, ZINC_900)
+      expect(cr).toBeGreaterThanOrEqual(4.5)
+    })
+  }
+})
+
+describe('WCAG 2.1 AA contrast — staleness text (zinc-700) on stale item background (bg-zinc-200)', () => {
+  it('bg-zinc-200 meets 4.5:1 AA with zinc-700 staleness text', () => {
+    const cr = contrastRatio(BACKGROUNDS['bg-zinc-200'], ZINC_700)
+    expect(cr).toBeGreaterThanOrEqual(4.5)
+  })
+})
+
+describe('WCAG 2.1 AA contrast — done/strikethrough text (zinc-600) on bg-white', () => {
+  it('bg-white meets 4.5:1 AA with zinc-600 done text', () => {
+    const cr = contrastRatio(BACKGROUNDS['bg-white'], ZINC_600)
+    expect(cr).toBeGreaterThanOrEqual(4.5)
+  })
+})

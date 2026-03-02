@@ -180,4 +180,33 @@ describe("TodoList", () => {
     // Non-stale aging item should NOT have dashed borders
     expect(items[5]?.className).not.toContain("border-dashed");
   });
+
+  it("renders the list with role=list and aria-label", () => {
+    const todos = [makeTodo("Task A")];
+    render(
+      <TodoList
+        todos={todos}
+        isLoading={false}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    const list = screen.getByRole("list", { name: /your tasks/i });
+    expect(list).toBeTruthy();
+    expect(list.tagName).toBe("UL");
+  });
+
+  it("renders skeleton with aria-busy and aria-label while loading", () => {
+    const { container } = render(
+      <TodoList
+        todos={[]}
+        isLoading={true}
+        onDone={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+    const skeleton = container.querySelector("ul");
+    expect(skeleton?.getAttribute("aria-busy")).toBe("true");
+    expect(skeleton?.getAttribute("aria-label")).toBe("Loading tasks");
+  });
 });
