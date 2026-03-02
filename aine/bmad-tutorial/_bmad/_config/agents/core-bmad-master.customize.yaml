@@ -25,7 +25,10 @@ memories: []
 
 # Add custom menu items (appended to base menu)
 # Don't include * prefix or help/exit - auto-injected
-menu: []
+menu:
+  - trigger: story-pipeline
+    workflow: '/custom/workflow-sprint-run-all.yaml'
+    description: My custom workflow
 # Example:
 # menu:
 #   - trigger: my-workflow
